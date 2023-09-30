@@ -1,0 +1,71 @@
+name: transcendece
+
+# Systems
+services:
+  # Reverse-Proxy Server
+  nginx:
+    build:
+      context: .
+      dockerfile: requirements/nginx/Dockerfile
+    container_name: nginx
+    volumes:
+      - ./requirements/nginx/conf/:/etc/nginx/http.d/
+      - ./requirements/nginx/tools/:/etc/nginx/ssl/
+      - wordpress:/var/www/
+    ports:
+      - "443:443"
+    networks:
+      - common
+    restart: always
+
+  # Database
+  postgresql:
+    build:
+      context: .
+      dockerfile: requirements/mariadb/Dockerfile
+    container_name: mariadb
+    networks:
+      - common
+    restart: always
+
+  # Website Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: requirements/wordpress/Dockerfile
+    container_name: wordpress
+    env_file:
+      - .env
+    volumes:
+      - wordpress:/var/www/
+    networks:
+      - common
+    restart: always
+
+  # Website Backend
+  backend:
+    build:
+      context: .
+      dockerfile: requirements/wordpress/Dockerfile
+    container_name: wordpress
+    env_file:
+      - .env
+    volumes:
+      - wordpress:/var/www/
+    networks:
+      - common
+    restart: always
+
+# Shared Volumes
+volumes:
+  database:
+    driver_opts:
+      o: bind
+      type: none
+      device: ./data/
+
+# Shared Networks
+networks:
+  common:
+    name: common
+    driver: bridge
