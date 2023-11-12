@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: django/Dockerfile
+    image: django_server
+    container_name: django
+    ports:
+      -8000:8000
+    networks:
+      - trancending
+    volumes:
+      - django-volume:/
+    env_file:
+      - .env
+    restart: always #to be checked
+
+  postrgesql:
+    build:
+      context: .
+      dockerfile: postrgesql/Dockerfile
+
+volumes:
+  django-volume:
+    o: bind
+    type: none
+    device: ${PWD}/django
