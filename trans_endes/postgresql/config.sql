@@ -1,28 +1,30 @@
-CREATE DATABASE transcendence_db;
-
---change pw to env
 CREATE USER admin_user WITH PASSWORD 'docker';
 
-GRANT ALL PRIVILEGES ON DATABASE transcendence TO admin_user;
+CREATE DATABASE transcendence_db WITH OWNER admin_user;
 
 CREATE TABLE users(
-	userKeyId INT PRIMARY KEY,
-	email varchar(30),
-	pwd varchar(30),
-	userName varchar(30),
-	firstName varchar(30),
-	lastName varchar(30),
-	avatar varchar(255),
-	games int,
-	wins int,
-	losses int,
-	friends int,
+	userKeyId SERIAL PRIMARY KEY,
+	email VARCHAR(30),
+	pwd VARCHAR(30),
+	userName VARCHAR(30),
+	firstName VARCHAR(30),
+	lastName VARCHAR(30),
+	avatar VARCHAR(255),
+	games INT,
+	wins INT,
+	losses INT,
+	friends INT
 );
 
 CREATE TABLE history(
-	gameID	INT PRIMARY KEY,
-	playerOne	varchar(30),
-	playerTwo	varchar(30),
-	enemyScore	int,
-	ownScore	int,
-)
+	gameID	SERIAL PRIMARY KEY,
+	playerOne	VARCHAR(30),
+	playerTwo	VARCHAR(30),
+	enemyScore	INT,
+	ownScore	INT
+);
+
+GRANT ALL PRIVILEGES ON DATABASE transcendence_db TO admin_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO admin_user;
+GRANT CREATE ON SCHEMA public TO admin_user;
