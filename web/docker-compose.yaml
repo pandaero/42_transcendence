@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   django:
-    command: python manage.py runserver 0.0.0.0:8000
     container_name: django_web
     build:
       context: ./django
@@ -10,7 +9,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/code
+      - ./django/backend:/code
     depends_on:
     - postgresql
   postgresql:
@@ -25,8 +24,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_ROOT_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
     volumes:
-      - ./postgresql/config.sql:/docker-entrypoint-initdb.d/config.sql
-      - ./postgresql/data:/var/lib/postgresql/data
+     - ./postgresql/config.sql:/docker-entrypoint-initdb.d/config.sql
+     - ./postgresql/data:/var/lib/postgresql/data
     env_file:
       - .env
     ports: 
