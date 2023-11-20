@@ -1,4 +1,4 @@
-FROM postgres:alpine3.18
+FROM postgres16.1:alpine3.18
 
 # ENV POSTGRES_PASSWORD docker
 # ENV POSTGRES_DB trancendense_db

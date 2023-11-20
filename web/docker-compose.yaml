@@ -10,24 +10,26 @@ services:
       - "8000:8000"
     volumes:
       - ./django/backend:/code
+      - ./django/start.sh:/code/start.sh
     depends_on:
-    - postgresql
-    # env_file:
-    #   - .env
-    networks:
-      - yourmom
+    - postgres
+    env_file:
+      - .env
+    # networks:
+    #   - my_network
 
-  postgresql:
+  postgres:
     build:
       context: .
       dockerfile: postgresql/Dockerfile
     image: "postgres"
     container_name: "postgres"
     environment:
-      POSTGRES_DB : ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_ROOT_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
+      POSTGRES_DB : ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_HOST : ${DB_HOST}
+      POSTGRES_PORT : ${DB_PORT}
     volumes:
      - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
      - ./postgresql/data:/var/lib/postgresql/data
@@ -35,33 +37,6 @@ services:
       - .env
     ports: 
       - "5432:5432"
-    networks:
-      - yourmom
+    # networks:
+      # - my_network
     restart: unless-stopped
-
-
-networks:
-  yourmom:
-    driver: bridge
-    name: yourmom
-
-
-# services:
-#   django:
-#     depends_on:
-#       - postrgesql
-#     build:
-#       context: .
-#       dockerfile: django/Dockerfile
-#     image: backend
-#     container_name: django
-#     ports:
-#       - "8000:8000"
-#     # networks:
-#     #   - trancending
-#     volumes:
-#       - ./django/requirements.txt:/var/requirements.txt
-#     env_file:
-#       - .env
-#     restart: always #to be checked
-
