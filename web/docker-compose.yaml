@@ -12,7 +12,7 @@ services:
       - ./django/backend:/code
       - ./django/start.sh:/code/start.sh
     depends_on:
-    - postgres
+      - postgres
     env_file:
       - .env
     # networks:

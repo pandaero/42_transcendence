@@ -134,7 +134,7 @@ class History(models.Model):
         db_table = 'history'
 
 
-class Users(models.Model):
+class UsersDb(models.Model):
     userkeyid = models.AutoField(primary_key=True)
     email = models.CharField(blank=True, null=True)
     pwd = models.CharField(blank=True, null=True)
