@@ -12,27 +12,27 @@ document.addEventListener("click", (e) => {
 
 const urlRoutes = {
 	404: {
-		template: "/templates/404.html",
+		template: "404.html",
 		title: "404 | " + urlPageTitle,
 		description: "Page not found",
 	},
 	"/": {
-		template: "/templates/index.html",
+		template: "index.html",
 		title: "Home | " + urlPageTitle,
 		description: "This is the home page",
 	},
 	"/about": {
-		template: "/templates/about.html",
+		template: "about.html",
 		title: "About Us | " + urlPageTitle,
 		description: "This is the about page",
 	},
 	"/contact": {
-		template: "/templates/contact.html",
+		template: "contact.html",
 		title: "Contact Us | " + urlPageTitle,
 		description: "This is the contact page",
 	},
 	"/profile": {
-		template: "/templates/profile.html",
+		template: "profile.html",
 		title: "Profile | " + urlPageTitle,
 		description: "Profile page",
 	},
