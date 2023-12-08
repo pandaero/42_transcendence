@@ -1,20 +1,14 @@
 import re
 
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-
 def validateEmail(email):
-	if (re.fullmatch(regex, email)):
+	regex = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,7}$'
+	if re.fullmatch(regex, email):
 		return True
 	return False
 
 def validatePassword(password):
-	if len(password) < 8 and not re.search("[a-z]", password):
-		return False
-	if not re.search("[A-Z]", password):
-		return False
-	if not re.search("[0-9]", password):
-		return False
-	if not re.search("[!@#$%^&*]", password):
-		return False
-	return True
+	regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_=+:;"\'<>?,./`~]).{8,}$'
+	if re.fullmatch(regex, password):
+		return True
+	return False
 

@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html>
-	{% load static %}
+    {% load static %}
 <head>
-	<title>Register</title>
+    <title>Register</title>
 </head>
 <body>
-	<h2>Register</h2>
-	<form method="post">
-		{% csrf_token %}
-		<div>
-			<label for="email">Email:</label>
-			<input type="email" id="email" name="email" required>
-		</div>
-		<div>
-			<label for="username">Username:</label>
-			<input type="text" id="username" name="username" required>
-		</div>
-		<div>
-			<label for="password">Password:</label>
-			<input type="password" id="password" name="password" required>
-		</div>
-		<span id="errorMsg" style="color: red;"></span>
-		<div>
-			<submit type="submit" value="Register" onclick={register()}>Register</submit>
-		</div>
-	</form>
-	{% comment %} <p>Already have an account? <a href="{% url 'login' %}">Login</a></p> {% endcomment %}
-	<script src="{% static 'js/register.js' %}"></script>
+    <h2>Register</h2>
+    <form method="post" id="registerForm">
+        {% csrf_token %}
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <span id="errorMsg" style="color: red;"></span>
+            <span id="successMsg" style="color: green;"></span>
+        </div>
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    <script type="module" src="{% static 'js/register.js' %}"></script>
 </body>
 </html>
