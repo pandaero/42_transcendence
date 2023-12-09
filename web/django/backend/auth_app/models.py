@@ -3,19 +3,19 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 class AppUserManager(BaseUserManager):
-    def create_user(self, email, username, password):
+    def create_user(self, email, password):
         if not email:
             raise ValueError('An email is required.')
         if not password:
             raise ValueError('A password is required.')
         email = self.normalize_email(email)
-        user = self.model(email=email, username=username)
+        user = self.model(email=email)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username, password):
-        user = self.create_user(email, username, password)
+    def create_superuser(self, email, password):
+        user = self.create_user(email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self.db)
@@ -24,9 +24,8 @@ class AppUserManager(BaseUserManager):
 class AppUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=50, unique=True)
-    username = models.CharField(max_length=30, unique=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    username = models.CharField(max_length=30, unique=True, blank=True, null=True)
     objects = AppUserManager()
     profile_picture = models.CharField(max_length=255, blank=True)
     friends = models.ManyToManyField('self', symmetrical=True, blank=True)

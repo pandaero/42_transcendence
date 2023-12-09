@@ -45,7 +45,6 @@ def register_view(request):
 	try:
 		user = AppUser.objects.create_user(
 			email=data['email'],
-			username=data['username'],
 			password=data['password']
 		)
 		return JsonResponse({'status':'success', 'message':'User created successfully.'})
