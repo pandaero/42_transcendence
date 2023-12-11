@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import views as auth_views
 from utils import validateEmail, validatePassword
 from .models import AppUser
 import json
@@ -50,3 +51,17 @@ def register_view(request):
 		return JsonResponse({'status':'success', 'message':'User created successfully.'})
 	except Exception as e:
 		return JsonResponse({'status':'error', 'message':str(e)})
+
+
+class CustomPasswordResetView(auth_views.PasswordResetView):
+	template_name = 'password_reset_form.html'
+# 
+class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+	template_name = 'password_reset_done.html'
+# 
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+	template_name = 'password_reset_confirm.html'
+# 
+class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+	template_name = 'password_reset_complete.html'
+# 

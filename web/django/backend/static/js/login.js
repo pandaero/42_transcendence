@@ -45,7 +45,7 @@ function login(email, password){
 	.then(response => response.json())
 	.then(data => {
 		if (data.status == "success"){
-			// window.location.href = "/";
+			window.location.href = "/";
 		} else {
 			errormsg.textContent = 'Invalid email or password.';
 		}
