@@ -1,6 +1,7 @@
 #!/bin/sh
 
-python3 manage.py makemigrations
+sleep 5
 python3 manage.py migrate
 python3 create_superuser.py
-python3 manage.py runserver 0.0.0.0:8000
+# -u is for debug mode
+python3 -u manage.py runserver 0.0.0.0:8000

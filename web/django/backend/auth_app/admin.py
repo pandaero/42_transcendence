@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import UsersDb, History
+from .models import AppUser, History
 
-admin.site.register(UsersDb)
+admin.site.register(AppUser)
 admin.site.register(History)
 

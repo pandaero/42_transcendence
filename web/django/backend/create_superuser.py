@@ -4,18 +4,17 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
 
-from django.contrib.auth.models import User
+from auth_app.models import AppUser
 
 def create_superuser():
-	username = os.getenv('DB_USER')
-	password = os.getenv('DB_PASSWORD')
 	email = os.getenv('DB_USER') + '@whateva.com'
+	password = os.getenv('DB_PASSWORD')
 
-	if not User.objects.filter(username=username).exists():
-		User.objects.create_superuser(username, email, password)
-		print(f"Superuser {username} created")
+	if not AppUser.objects.filter(email=email).exists():
+		AppUser.objects.create_superuser(email, password)
+		print(f"Superuser {email} created")
 	else:
-		print(f"Superuser {username} already exists")
+		print(f"Superuser {email} already exists")
 
 if __name__ == '__main__':
 	create_superuser()
