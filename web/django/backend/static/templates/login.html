@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    {% load static %}
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form method="post" id="loginForm">
+        {% csrf_token %}
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <span id="errorMsg" style="color: red;"></span>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+        <div>
+            <p>Forgot your password? <a href="{% url 'password_reset' %}">Reset it</a></p>
+        <div>
+            <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+        </div>
+
+    </form>
+    <script type='module' src="{% static 'js/login.js' %}"></script>
+</body>
+</html>
