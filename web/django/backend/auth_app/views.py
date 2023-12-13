@@ -1,13 +1,38 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.http import Http404
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from utils import validateEmail, validatePassword
 from .models import AppUser
 import json
+import sys
+
+def eprint(*args, **kwargs):
+	print(*args, file=sys.stderr, **kwargs)
 
 def index(request):
 	return render(request,'index.html')
+
+def game(request):
+	return render(request,'game.html')
+
+def profile(request):
+	return render(request, 'profile.html')
+
+def history(request):
+	return render(request, 'history.html')
+
+def settings(request):
+	render(request, 'index.html')
+	return render(request, 'settings.html')
+
+def main(request):
+	return render(request, 'main.html')
+
+def about(request):
+	eprint('Lets go')
+	return render(request, 'about.html')
 
 def register(request):
 	print('hello world')
@@ -29,6 +54,14 @@ def register(request):
 		return JsonResponse({'status':'success', 'user_id': user.user_id})
 	except Exception as e:
 		return JsonResponse({'status':'error', 'message':str(e)})
+
+def view_user(request):
+	if request.method == 'GET':
+		data = json.loads(request.body)
+		user = AppUser.objects.get(user_id=data['user_id'])
+		return JsonResponse({'status':'success', 'user': user.to_dict()})
+	else:
+		return Http404
 
 		
 #api

@@ -1,46 +1,35 @@
-.profile {
-	position: relative;
-	text-align: center;
-	color: rgb(151, 12, 12); /* Text color */
-	font-size: 24px; /* Font size */
-	font-family: Arial, sans-serif; /* Font family */
+
+
+body {
+	font-family: 'Lora', serif;
+	background-image: none;
+	background-size: 100% auto;
+}
+
+.text-colors {
+	color:rgb(200, 200, 200);
+}
+
+.text-colors:hover {
+	color:rgb(249, 249, 249); /* replace with your desired color */
   }
-  
-  .image {
-	width: 100%; /* Adjust the width as needed */
-	height: auto;
+
+  .navbar-nav li {
+	padding: 5px 10px; /* adjust as needed */
   }
-  
-  /* Styles for text positions */
-  .profile .text {
-	position: absolute;
-	color: white; /* Text color */
-	font-size: 18px; /* Font size */
-	font-weight: bold; /* Font weight */
-  }
-  
-  .bottom-left {
-	bottom: 10px;
-	left: 10px;
-  }
-  
-  .top-left {
-	top: 10px;
-	left: 10px;
-  }
-  
-  .top-right {
-	top: 10px;
-	right: 10px;
-  }
-  
-  .bottom-right {
-	bottom: 10px;
-	right: 10px;
-  }
-  
-  .centered {
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-  }
+
+.dark-icon{
+	color: rgb(70, 70, 70);
+}
+.dark-icon:hover{
+	color: rgb(10, 10, 10);
+}
+
+.span-container{
+	display: flex;
+	justify-content: center;
+}
+
+.span-container span{
+	margin: 1em;
+}

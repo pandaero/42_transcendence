@@ -1,74 +1,118 @@
-const urlPageTitle = "JS Single Page Application Router";
+window.onpopstate = function(event) {
+	handleRouting();
+};
 
-// create document click that watches the nav links only
-document.addEventListener("click", (e) => {
-	const { target } = e;
-	if (!target.matches("nav a")) {
-		return;
+window.onload = function() {
+	handleRouting();
+};
+
+function changeURL(path) {
+	history.pushState({}, '', path);
+}
+
+function handleRouting() {
+	switch (window.location.pathname) {
+		case '/':
+			console.log('Home page');
+			break;
+		case '/game':
+			console.log('Game page');
+			showGame();
+			break;
+		case '/profile':
+			console.log('Profile page');
+			showProfile();
+			break;
+		case '/history':
+			console.log('History page');
+			showHistory();
+			break;
+		case '/about':
+			console.log('About page');
+			showAboutUs();
+			break;
+		case '/settings':
+			console.log('Settings page');
+			showSettings();
+			break;
+		default:
+			console.log('Page not found');
+			console.log(window.location.pathname);
+			break;
+			// ShowNotFound();
 	}
-	e.preventDefault();
-	urlRoute();
-});
+}
 
-const urlRoutes = {
-	404: {
-		template: "404.html",
-		title: "404 | " + urlPageTitle,
-		description: "Page not found",
-	},
-	"/": {
-		template: "index.html",
-		title: "Home | " + urlPageTitle,
-		description: "This is the home page",
-	},
-	"/about": {
-		template: "about.html",
-		title: "About Us | " + urlPageTitle,
-		description: "This is the about page",
-	},
-	"/contact": {
-		template: "contact.html",
-		title: "Contact Us | " + urlPageTitle,
-		description: "This is the contact page",
-	},
-	"/profile": {
-		template: "profile.html",
-		title: "Profile | " + urlPageTitle,
-		description: "Profile page",
-	},
-};
 
-const urlRoute = (event) => {
-	event = even; // get window.event if event argument not provided
-	event.preventDefault();
-	// window.history.pushState(state, unused, target link);
-	window.history.pushState({}, "", event.target.href);
-	urlLocationHandler();
-};
+let background = ["none", "/static/images/background.jpg"];
+let i = 0;
 
-const urlLocationHandler = async () => {
-	const location = window.location.pathname; // get the url path
-	// if the path length is 0, set it to primary page route
-	if (location.length == 0) {
-		location = "/";
+function changeBg() {
+	i = (i + 1) % background.length; 
+	if (background[i] === "none") {
+	document.body.style.backgroundImage = background[i];
+	} else {
+	document.body.style.backgroundImage = `url(${background[i]})`;
 	}
-	// get the route object from the urlRoutes object
-	const route = urlRoutes[location] || urlRoutes["404"];
-	// get the html from the template
-	const html = await fetch(route.template).then((response) => response.text());
-	// set the content of the content div to the html
-	document.getElementById("content").innerHTML = html;
-	// set the title of the document to the title of the route
-	document.title = route.title;
-	// set the description of the document to the description of the route
-	document
-		.querySelector('meta[name="description"]')
-		.setAttribute("content", route.description);
-};
+	console.log(document.body.style.backgroundImage);
+}
 
-// add an event listener to the window that watches for url changes
-window.onpopstate = urlLocationHandler;
-// call the urlLocationHandler function to handle the initial url
-window.route = urlRoute;
-// call the urlLocationHandler function to handle the initial url
-urlLocationHandler();
+function showGame() {
+		fetch('game/game.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('content').innerHTML = data;
+			})
+			.catch(error => console.log(error));
+	}
+
+	function showProfile() {
+		fetch('profile/profile.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('content').innerHTML = data;
+			})
+			.catch(error => console.log(error));
+	}
+
+	function showHistory() {
+		fetch('history/history.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('content').innerHTML = data;
+			})
+			.catch(error => console.log(error));
+	}
+
+	function ShowNotFound() {
+		fetch('404.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('content').innerHTML = data;
+			})
+			.catch(error => console.log(error));
+	}
+
+	function showAboutUs() {
+		fetch('about/about.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('content').innerHTML = data;
+			})
+			.catch(error => console.log(error));
+	}
+
+	
+	function showSettings() {
+		fetch('settings/settings.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('content').innerHTML = data;
+			})
+			.catch(error => console.log(error));
+	}
+
+	function changeURL(path, title, stateObject) {
+		history.pushState(stateObject, title, path);
+		handleRouting();
+	}
