@@ -2,11 +2,11 @@
 <html>
     {% load static %}
 <head>
-    <title>Register</title>
+    <title>Login</title>
 </head>
 <body>
-    <h2>Register</h2>
-    <form method="post" id="registerForm">
+    <h2>Login</h2>
+    <form method="post" id="loginForm">
         {% csrf_token %}
         <div>
             <label for="email">Email:</label>
@@ -16,15 +16,17 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
+        <span id="errorMsg" style="color: red;"></span>
         <div>
-            <span id="errorMsg" style="color: red;"></span>
-            <span id="successMsg" style="color: green;"></span>
+            <button type="submit">Login</button>
         </div>
         <div>
-            <button type="submit">Register</button>
+            <p>Forgot your password? <a href="{% url 'password_reset' %}">Reset it</a></p>
+        <div>
+            <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
         </div>
+
     </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-    <script type="module" src="{% static 'js/register.js' %}"></script>
+    <script type='module' src="{% static 'js/login.js' %}"></script>
 </body>
 </html>

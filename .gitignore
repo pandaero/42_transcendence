@@ -1,2 +1,4 @@
 web/postgresql/data
 venv/
+*/__pycache__
+*.pyc
