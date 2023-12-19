@@ -1,3 +1,5 @@
+
+// on refresh handle the routing
 window.onpopstate = function(event) {
 	handleRouting();
 };
@@ -10,109 +12,87 @@ function changeURL(path) {
 	history.pushState({}, '', path);
 }
 
+function loadModule(str) {
+	import(str)
+		.then((module) => {
+			// Use the module
+			console.log('Module loaded ' , str);
+		})
+		.catch((err) => {
+			// Handle the error
+			console.error('Failed to load module', err);
+		});
+}
+// changing the path and content
 function handleRouting() {
-	switch (window.location.pathname) {
+	let page = window.location.pathname;
+	switch (page) {
 		case '/':
 			console.log('Home page');
+			showPage('main.html');
 			break;
 		case '/game':
-			console.log('Game page');
-			showGame();
+			loadModule('./game/tmpGame.js');
+			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/profile':
-			console.log('Profile page');
-			showProfile();
+			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/history':
-			console.log('History page');
-			showHistory();
+			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/about':
-			console.log('About page');
-			showAboutUs();
+			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/settings':
-			console.log('Settings page');
-			showSettings();
+			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+			break;
+		case '/register':
+			loadModule('./register.js');
+			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+			break;
+		case '/login':
+			loadModule('./login.js');
+			// console.log(`${page.slice(1)} page`);
+			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		default:
 			console.log('Page not found');
 			console.log(window.location.pathname);
-			break;
-			// ShowNotFound();
+		break;
 	}
 }
 
-
-let background = ["none", "/static/images/background.jpg"];
-let i = 0;
-
-function changeBg() {
-	i = (i + 1) % background.length; 
-	if (background[i] === "none") {
-	document.body.style.backgroundImage = background[i];
-	} else {
-	document.body.style.backgroundImage = `url(${background[i]})`;
-	}
-	console.log(document.body.style.backgroundImage);
+function showPage(path) {
+	fetch(path)
+		.then(response => response.text())
+		.then(data => {
+			document.getElementById('content').innerHTML = data;
+		})
+		.catch(error => console.log(error));
 }
 
-function showGame() {
-		fetch('game/game.html')
-			.then(response => response.text())
-			.then(data => {
-				document.getElementById('content').innerHTML = data;
-			})
-			.catch(error => console.log(error));
-	}
+			
+function changeURL(path, title, stateObject) {
+	history.pushState(stateObject, title, path);
+	handleRouting();
+}	
 
-	function showProfile() {
-		fetch('profile/profile.html')
-			.then(response => response.text())
-			.then(data => {
-				document.getElementById('content').innerHTML = data;
-			})
-			.catch(error => console.log(error));
-	}
-
-	function showHistory() {
-		fetch('history/history.html')
-			.then(response => response.text())
-			.then(data => {
-				document.getElementById('content').innerHTML = data;
-			})
-			.catch(error => console.log(error));
-	}
-
-	function ShowNotFound() {
-		fetch('404.html')
-			.then(response => response.text())
-			.then(data => {
-				document.getElementById('content').innerHTML = data;
-			})
-			.catch(error => console.log(error));
-	}
-
-	function showAboutUs() {
-		fetch('about/about.html')
-			.then(response => response.text())
-			.then(data => {
-				document.getElementById('content').innerHTML = data;
-			})
-			.catch(error => console.log(error));
-	}
-
+	// part for background change in settings
+	let background = ["none", "/static/images/background.jpg", "/static/images/black.jpg" ];
+	let i = 0;
 	
-	function showSettings() {
-		fetch('settings/settings.html')
-			.then(response => response.text())
-			.then(data => {
-				document.getElementById('content').innerHTML = data;
-			})
-			.catch(error => console.log(error));
+	function changeBg() {
+		i = (i + 1) % background.length; 
+		if (background[i] === "none") {
+		document.body.style.backgroundImage = background[i];
+		} else {
+		document.body.style.backgroundImage = `url(${background[i]})`;
+		}
+		console.log(document.body.style.backgroundImage);
 	}
 
-	function changeURL(path, title, stateObject) {
-		history.pushState(stateObject, title, path);
-		handleRouting();
-	}
+
+	// document.getElementById('gameButton').addEventListener('click', function() {
+	// 	addStylesheet('styles/game.css');
+	// });

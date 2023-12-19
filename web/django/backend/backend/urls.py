@@ -19,17 +19,6 @@ from auth_app import views
 
 urlpatterns = [
 	path('admin', admin.site.urls),
-	path('', views.index),
-	path('main', views.index),
-	path('game', views.index),
-	path('game/game.html', views.game),
-	path('profile', views.index),
-	path('profile/profile.html', views.profile),
-	path('history', views.index),
-	path('history/history.html', views.history),
-	path('settings', views.index,),
-	path('settings/settings.html', views.settings),
-	path('about', views.index),
-	path('about/about.html', views.about),
+	path('', views.index_view),
 	path('', include('auth_app.urls'))
 ]

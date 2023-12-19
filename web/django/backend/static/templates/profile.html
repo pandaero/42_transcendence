@@ -1,4 +1,15 @@
-<h1>Profile</h1>
 <div class="profile">
-
+	{% if user.is_authenticated and not user.username %}
+	<h1>Hello {{ user.email}}, you need a username</h1>
+		{% if user.username %}
+			<h1>Hello, {{ user.username }}!</h1>
+		{% endif %}
+	<form action="{% url 'logout' %}" method="post">
+		{% csrf_token %}
+		<button type="submit">Logout</button>
+	</form>
+	{% else %}
+	<h1>You are not logged in</h1>
+	<button onclick="changeURL('/login', 'Login', {page: 'login'})">Login</button>
+	{% endif %}
 </div>

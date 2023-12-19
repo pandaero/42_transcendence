@@ -19,6 +19,6 @@ export function validateEmail(email){
 }
 
 export function validatePassword(password){
-	let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.,?<>"';:-_=+\|/`~]).{8,}$/;
+	let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.,?<>"';:-_=+\|/`~])(?=.*\d).{8,}$/;
 	return regex.test(password);
 }

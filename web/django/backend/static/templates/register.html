@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html>
-    {% load static %}
-<head>
-    <title>Register</title>
-</head>
-<body>
+{% load static %}
     <h2>Register</h2>
     <form method="post" id="registerForm">
         {% csrf_token %}
@@ -20,11 +14,10 @@
             <span id="errorMsg" style="color: red;"></span>
             <span id="successMsg" style="color: green;"></span>
         </div>
-        <div>
-            <button type="submit">Register</button>
-        </div>
     </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    <div>
+        <button id="registerButton" class="btn-sm btn-dark" >Register</button>
+    </div>
+    Already have an account?
+	<button class= "btn-dark" onclick="changeURL('/login', 'Login', {page: 'login'})">Login</button>
     <script type="module" src="{% static 'js/register.js' %}"></script>
-</body>
-</html>

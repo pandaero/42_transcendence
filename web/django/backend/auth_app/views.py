@@ -14,7 +14,7 @@ def index_view(request):
 	return render(request,'index.html')
 
 def game(request):
-	return render(request,'game.html')
+	return render(request,'tmpGame.html')
 
 def profile(request):
 	return render(request, 'profile.html')
@@ -30,15 +30,18 @@ def main(request):
 	return render(request, 'main.html')
 
 def about(request):
-	eprint('Lets go')
 	return render(request, 'about.html')
 
-
 def login_view(request):
-	if request.method == 'GET':
-		return render(request, 'login.html')
+	return render(request, 'login.html')
 
-	elif request.method == 'POST':
+def game_result(request):
+	eprint(request)
+	eprint("Thats it\n")
+	return JsonResponse({'status':'success'})
+
+def login_view2(request):
+	if request.method == 'POST':
 		try:
 			data = json.loads(request.body)
 		except Exception as e:
@@ -61,21 +64,21 @@ def login_view(request):
 			return JsonResponse({'status':'error', 'message': "Invalid credentials."})
 
 def register_view(request):
-	if request.method == 'GET':
-		return render(request, 'register.html')
+	return render(request, 'register.html')
 
-	elif request.method == 'POST':
+def register_form(request):
+	if request.method == 'POST':
 		data = json.loads(request.body)
 		if not validateEmail(data['email']) and not validatePassword(data['password']):
 			return JsonResponse({'status':'error', 'message':'Invalid Email or password.'})
-	try:
-		user = AppUser.objects.create_user(
-			email=data['email'],
-			password=data['password']
-		)
-		return JsonResponse({'status':'success', 'message':'User created successfully.'})
-	except Exception as e:
-		return JsonResponse({'status':'error', 'message':str(e)})
+		try:
+			user = AppUser.objects.create_user(
+				email=data['email'],
+				password=data['password']
+			)
+			return JsonResponse({'status':'success', 'message':'User created successfully.'})
+		except Exception as e:
+			return JsonResponse({'status':'error', 'message':str(e)})
 
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
