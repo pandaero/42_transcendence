@@ -17,7 +17,10 @@
 	<title>Transcendence</title>
 </head>
 <body>
-
+	{% comment %} {% if not user.is_authenticated %}
+		<h1>You are not logged in </h1>
+		<button onclick="changeURL('/login', 'Login', {page: 'login'})">Login</button>
+	{% else %} {% endcomment %}
 	<div>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div class="container-fluid">
@@ -80,6 +83,7 @@
 	</div>
 
 </nav>
+{% comment %} {% endif %} {% endcomment %}
 <div id="content"></div>
 
 

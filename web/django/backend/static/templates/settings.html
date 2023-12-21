@@ -1,3 +1,27 @@
-<h2>Settings wow</h2>
-
-<button onclick="changeBg()">Change Background</button>
+<!DOCTYPE html>
+<html>
+	{% load static %}
+<head>
+	<title>Profile settings</title>
+</head>
+<body>
+	<h2>Profile settings</h2>
+	<form method="post" id="profileSettingsForm">
+		{% csrf_token %}
+		{% if not user.is_authenticated%}
+		<h1>You are not logged in </h1>
+		<button onclick="changeURL('/login', 'Login', {page: 'login'})">Login</button>
+	</div>
+		{% else %}
+			<div>
+				<label for="email">Your Email:</label>
+				<input type="email" id="email" name="email" placeholder={{ user.email }}>
+				
+				<div>
+			<button type="submit">Submit</button>
+			<button onclick="changeBg()">Change Background</button>
+		</div>
+		{% endif %}
+	</form>
+</body>
+</html>

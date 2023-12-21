@@ -8,10 +8,6 @@ window.onload = function() {
 	handleRouting();
 };
 
-function changeURL(path) {
-	history.pushState({}, '', path);
-}
-
 function loadModule(str) {
 	import(str)
 		.then((module) => {
@@ -96,3 +92,7 @@ function changeURL(path, title, stateObject) {
 	// document.getElementById('gameButton').addEventListener('click', function() {
 	// 	addStylesheet('styles/game.css');
 	// });
+
+function changeUserSettings() {
+	
+}
