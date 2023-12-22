@@ -1,14 +1,12 @@
 import { validateEmail, validatePassword } from "./utils.js";
 import { getCookie } from "./utils.js";
 
-document.addEventListener('DOMContentLoaded', (event) => {
-	document.getElementById('registerForm').addEventListener('submit', function(e) {
-		e.preventDefault(); // Prevents the default form submit action
-		let email = document.getElementById("email").value;
-		let password = document.getElementById("password").value;
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+	e.preventDefault(); // Prevents the default form submit action
+	let email = document.getElementById("email").value;
+	let password = document.getElementById("password").value;
 
-		register(email, password);
-	});
+	register(email, password);
 });
 
 function register(email, password){
@@ -43,6 +41,7 @@ function register(email, password){
 		.then(response => response.json())
 		.then(data => {
 			if (data.status == "success"){
+				errormsg.textContent = '';
 				successmsg.textContent = 'Account created successfully.';
 			} else {
 				errormsg.textContent = 'Email or username already exists.';

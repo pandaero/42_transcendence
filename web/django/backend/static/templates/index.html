@@ -16,17 +16,16 @@
 			<nav class="navbar">
 				{% if user.is_authenticated and not user.username %}
 					<h1>Hello {{ user.email}}, you need a username</h1>
-						{% if user.username %}
-							<h1>Hello, {{ user.username }}!</h1>
-						{% endif %}
+				{% elif user.username %}
+					<h1>Hello, {{ user.username }}!</h1>
+					{% else %}
+					<h1>You are not logged in</h1>
+					<a href="{% url 'login' %} ">Login</a>
+					{% endif %}
 					<form action="{% url 'logout' %}" method="post">
 						{% csrf_token %}
 						<button type="submit">Logout</button>
 					</form>
-				{% else %}
-					<h1>You are not logged in</h1>
-					<a href="{% url 'login' %} ">Login</a>
-				{% endif %}
 				<div class="container-fluid">
 					<span class="navbar-brand mb-0 h1">
 						<a href="/"class="btn btn-info " role="button">Home</a>
@@ -34,7 +33,7 @@
 						<a href="/history" class="btn btn-info" role="button">History</a>
 						<a href="/about" class="btn btn-info" role="button">About</a>
 						<a href="/profile" class="btn btn-info" role="button">Profile
-							<img href="/profile" src="gorilla.jpg" class="rounded-circle" width="50">
+							<img href="/profile" src={{ user.profile_picture.url }} class="rounded-circle" width="50">
 						</a>
 						<div>
 						<div>

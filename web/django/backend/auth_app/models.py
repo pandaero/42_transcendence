@@ -11,6 +11,7 @@ class AppUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email)
         user.set_password(password)
+        user.profile_picture = "static/images/default.jpg"
         user.save(using=self._db)
         return user
 
@@ -27,7 +28,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     username = models.CharField(max_length=30, unique=True, blank=True, null=True)
     objects = AppUserManager()
-    profile_picture = models.CharField(max_length=255, blank=True)
+    profile_picture = models.ImageField(null=True, blank=True, upload_to='images/')
     friends = models.ManyToManyField('self', symmetrical=True, blank=True)
     games = models.IntegerField(blank=True, null=True)
     wins = models.IntegerField(blank=True, null=True)
