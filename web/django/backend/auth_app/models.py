@@ -11,7 +11,7 @@ class AppUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email)
         user.set_password(password)
-        user.profile_picture = "static/images/default.jpg"
+        user.profile_picture = "images/default.jpg"
         user.save(using=self._db)
         return user
 
