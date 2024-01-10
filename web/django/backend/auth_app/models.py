@@ -38,12 +38,20 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-    
-    
 class History(models.Model):
     game_id = models.AutoField(primary_key=True)
-    player_one = models.CharField(blank=True, null=True)
-    player_two = models.CharField(blank=True, null=True)
+    player_one = models.ForeignKey(AppUser, on_delete=models.SET_NULL, null=True, related_name='player_one_history')
+    player_two = models.ForeignKey(AppUser, on_delete=models.SET_NULL, null=True, related_name='player_two_history')
     player_one_score = models.IntegerField(blank=True, null=True)
     player_two_score = models.IntegerField(blank=True, null=True)
 
+class FriendRequest(models.Model):
+    sender = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='sent_requests')
+    receiver = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='received_requests')
+    is_accepted = models.BooleanField(default=False)
+
+    def accept(self):
+        self.is_accepted = True
+        self.save()
+        self.sender.friends.add(self.receiver)
+        self.receiver.friends.add(self.sender)

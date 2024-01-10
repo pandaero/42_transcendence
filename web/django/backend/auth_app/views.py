@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login as auth_login, views as auth
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from utils import validateEmail, validatePassword
-from .models import AppUser
+from .models import AppUser, FriendRequest
 import base64
 import uuid
 import json
@@ -13,6 +13,14 @@ import sys
 @login_required(login_url='login')
 def index_view(request):
 	return render(request,'index.html')
+	
+
+def friends_view(request):
+	if request.method == 'GET':
+		friend_requests = FriendRequest.objects.filter(receiver=request.user)
+		exclude_users = friend_requests.values_list('sender', flat=True)
+		users = AppUser.objects.exclude(user_id__in=exclude_users)
+		return render (request, 'friends.html', {'users': users, 'friend_requests' : friend_requests})
 
 def login_view(request):
 	if request.method == 'GET':
@@ -96,8 +104,43 @@ def settings_view(request):
 			user.save()
 
 		return JsonResponse({'status':'success', 'message':'Settings updated successfully.'})
+
+
+def send_friend_request_view(request, user_id):
+	if request.method == 'POST':
+		from_user = request.user
+		print(request.user, file=sys.stderr)
+		to_user = AppUser.objects.get(user_id=user_id)
+		print(to_user, file=sys.stderr)
+		friend_requests, created = FriendRequest.objects.get_or_create(sender=from_user, receiver=to_user)
+		if created:
+			return JsonResponse({'status':'success', 'message':'Friend request sent successfully.'})
+		else:
+			return JsonResponse({'status':'error', 'message':'Friend request already sent.'})
 	
-	
+def accept_friend_request_view(request, friend_request_id):
+	if request.method == 'POST':
+		try:
+			friend_request = FriendRequest.objects.get(id=friend_request_id)
+		except:
+			return JsonResponse({'status':'error', 'message':'An error occurred accepting the friend request.'})
+
+		if friend_request.receiver == request.user:
+			friend_request.accept()
+			friend_request.delete()
+			return JsonResponse({'status':'success', 'message':'Friend request accepted successfully.'})
+
+def decline_friend_request_view(request, friend_request_id):
+	if request.method == 'POST':
+		try:
+			friend_request = FriendRequest.objects.get(id=friend_request_id)
+		except:
+			return JsonResponse({'status': 'error', 'message':'An error occurred declining the friend request.'})
+
+		if friend_request.receiver == request.user:
+			friend_request.delete()
+			return JsonResponse({'status': 'success', 'message':'Friend request declined.'})
+
 class CustomPasswordResetView(auth_views.PasswordResetView):
 	template_name = 'password_reset_form.html'
 # 
