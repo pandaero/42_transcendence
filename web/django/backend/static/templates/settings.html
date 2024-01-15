@@ -1,3 +1,59 @@
+<<<<<<< HEAD
 <h2>Settings wow</h2>
 
 <button onclick="changeBg()">Change Background</button>
+=======
+<!DOCTYPE html>
+<html>
+	{% load static %}
+<head>
+	<title>Profile settings</title>
+</head>
+<body>
+	<h2>Profile settings</h2>
+	<form method="post" id="settingsForm">
+		{% csrf_token %}
+		{% if not user.is_authenticated%}
+		<h1>You are not logged in </h1>
+		<button onclick="changeURL('/login', 'Login', {page: 'login'})">Login</button>
+		{% else %}
+			<div>
+				<form method="post" enctype="multipart/form-data" id="settingsForm">
+					<ul>
+						<li>
+							<label for="email">Your Email:</label>
+							<input type="email" id="email" name="email" placeholder={{ user.email }}>
+						</li>
+						<li>
+							<label for="username">Your Username:</label>
+							<input type="text" id="username" name="username" placeholder={{ user.username }}>
+						</li>
+						<li>
+							<label for="profile picture">Your Profile Picture:</label>
+							<img src="{{ user.profile_picture.url }}" alt="Profile Picture" width="100" height="100">
+							<input type="file" id="profile_picture" name="profile_picture">
+						</li>
+						<li>
+							<label for="password">New Password:</label>
+							<input type="password" id="password" name="password">
+						</li>
+						<li>
+							<label for="confirm_password">Confirm Password:</label>
+							<input type="password" id="confirm_password" name="confirm_password">
+						</li>
+					</ul>
+					<button type="submit">Submit</button>
+					<button type="button" onclick="changeBg()">Change Background</button>
+				</form>
+				<div>
+					<span id="successMsg" style="color: green;"></span>
+						<span id="errorMsg" style="color: red;"></span>
+				</div>
+			</div>
+		{% endif %}
+	</form>
+</body>
+
+<script type="module" src="{% static 'js/settings.js' %}"></script>
+</html>
+>>>>>>> origin/friendrequest

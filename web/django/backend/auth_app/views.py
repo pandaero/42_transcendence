@@ -1,17 +1,32 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, login as auth_login
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import authenticate, login as auth_login, views as auth_views
+from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
 from utils import validateEmail, validatePassword
-from .models import AppUser
+from .models import AppUser, FriendRequest
+import base64
+import uuid
 import json
 import sys
+<<<<<<< HEAD
 
 def eprint(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
+=======
+>>>>>>> origin/friendrequest
 
+@login_required(login_url='login')
 def index_view(request):
 	return render(request,'index.html')
+	
+
+def friends_view(request):
+	if request.method == 'GET':
+		friend_requests = FriendRequest.objects.filter(receiver=request.user)
+		exclude_users = friend_requests.values_list('sender', flat=True)
+		users = AppUser.objects.exclude(user_id__in=exclude_users)
+		return render (request, 'friends.html', {'users': users, 'friend_requests' : friend_requests})
 
 def game(request):
 	return render(request,'tmpGame.html')
@@ -80,6 +95,81 @@ def register_form(request):
 		except Exception as e:
 			return JsonResponse({'status':'error', 'message':str(e)})
 
+def settings_view(request):
+	if request.method == 'GET':
+		return render(request, 'settings.html')
+	
+	elif request.method == 'POST':
+		data = json.loads(request.body)
+		user_id = request.user.user_id
+		user = AppUser.objects.get(user_id=user_id)
+
+		try:
+			if 'email' in data:
+				new_email = data['email']
+				user.email = new_email
+				user.save()
+		except:
+			return JsonResponse({'status':'error', 'message':'Email already exists.'})
+
+		try:
+			if 'username' in data:
+				new_username = data['username']
+				user.username = new_username
+				user.save()
+		except:
+			return JsonResponse({'status':'error', 'message':'Username already exists.'})
+
+		if 'profile_picture' in data:
+			imgstr = data['profile_picture']
+			image_data = base64.b64decode(imgstr)
+			
+			filename = "{}.{}".format(uuid.uuid4(), 'jpg')
+			user.profile_picture.save(filename, ContentFile(image_data), save=True)
+			user.save()
+
+		if 'password' in data:
+			new_password = data['password']
+			user.set_password(new_password)
+			user.save()
+
+		return JsonResponse({'status':'success', 'message':'Settings updated successfully.'})
+
+
+def send_friend_request_view(request, user_id):
+	if request.method == 'POST':
+		from_user = request.user
+		print(request.user, file=sys.stderr)
+		to_user = AppUser.objects.get(user_id=user_id)
+		print(to_user, file=sys.stderr)
+		friend_requests, created = FriendRequest.objects.get_or_create(sender=from_user, receiver=to_user)
+		if created:
+			return JsonResponse({'status':'success', 'message':'Friend request sent successfully.'})
+		else:
+			return JsonResponse({'status':'error', 'message':'Friend request already sent.'})
+	
+def accept_friend_request_view(request, friend_request_id):
+	if request.method == 'POST':
+		try:
+			friend_request = FriendRequest.objects.get(id=friend_request_id)
+		except:
+			return JsonResponse({'status':'error', 'message':'An error occurred accepting the friend request.'})
+
+		if friend_request.receiver == request.user:
+			friend_request.accept()
+			friend_request.delete()
+			return JsonResponse({'status':'success', 'message':'Friend request accepted successfully.'})
+
+def decline_friend_request_view(request, friend_request_id):
+	if request.method == 'POST':
+		try:
+			friend_request = FriendRequest.objects.get(id=friend_request_id)
+		except:
+			return JsonResponse({'status': 'error', 'message':'An error occurred declining the friend request.'})
+
+		if friend_request.receiver == request.user:
+			friend_request.delete()
+			return JsonResponse({'status': 'success', 'message':'Friend request declined.'})
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
 	template_name = 'password_reset_form.html'
