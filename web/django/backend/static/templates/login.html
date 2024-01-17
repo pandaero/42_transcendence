@@ -5,9 +5,20 @@
     <title>Login</title>
 </head>
 <body>
-    <h2>Login</h2>
     <form method="post" id="loginForm">
-        {% csrf_token %}
+        {% if user.is_authenticated and not user.username %}
+        <h1>Hello {{ user.email}}, you need a username</h1>
+    {% elif user.username %}
+        <h1>Hello, {{ user.username }}!</h1>
+        {% else %}
+        <h1>You are not logged in</h1>
+        <a href="{% url 'login' %} ">Login</a>
+        {% endif %}
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        						<button type="submit">Logout</button>
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
@@ -16,12 +27,8 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-<<<<<<< HEAD
         <span id="errorMsg" style="color: red;"></span>
         </form>
-=======
-         <span id="errorMsg" style="color: red;"></span>
->>>>>>> origin/friendrequest
         <div>
             <button class="btn-sm btn-dark"id="loginBtn">Login</button>
         </div>

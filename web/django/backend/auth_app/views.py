@@ -3,22 +3,20 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login as auth_login, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
+from django.shortcuts import redirect
+from urllib.parse import urlparse
 from utils import validateEmail, validatePassword
 from .models import AppUser, FriendRequest
 import base64
 import uuid
 import json
 import sys
-<<<<<<< HEAD
 
 def eprint(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
-=======
->>>>>>> origin/friendrequest
 
-@login_required(login_url='login')
-def index_view(request):
-	return render(request,'index.html')
+def header_view(request):
+	return render(request,'header.html')
 	
 
 def friends_view(request):
@@ -31,6 +29,7 @@ def friends_view(request):
 def game(request):
 	return render(request,'tmpGame.html')
 
+@login_required(login_url='/login/login.html')
 def profile(request):
 	return render(request, 'profile.html')
 
@@ -38,7 +37,6 @@ def history(request):
 	return render(request, 'history.html')
 
 def settings(request):
-	render(request, 'index.html')
 	return render(request, 'settings.html')
 
 def main(request):
@@ -48,6 +46,8 @@ def about(request):
 	return render(request, 'about.html')
 
 def login_view(request):
+	if request.user.is_authenticated:
+		return redirect('/main')
 	return render(request, 'login.html')
 
 def game_result(request):

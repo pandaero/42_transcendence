@@ -1,7 +1,6 @@
 import { validateEmail, validatePassword } from "./utils.js";
 import { getCookie } from "./utils.js";
 
-<<<<<<< HEAD
 console.log("register.js loaded");
 
 let registerBtn = document.getElementById('registerButton');
@@ -13,13 +12,6 @@ if (registerBtn) {
 	console.log("register button clicked");
 	let email = document.getElementById("email").value;
 	let password = document.getElementById("password").value;
-=======
-document.getElementById('registerForm').addEventListener('submit', function(e) {
-	e.preventDefault(); // Prevents the default form submit action
-	let email = document.getElementById("email").value;
-	let password = document.getElementById("password").value;
-
->>>>>>> origin/friendrequest
 	register(email, password);
 });
 }
@@ -57,6 +49,7 @@ function register(email, password){
 		.then(response => response.json())
 		.then(data => {
 			if (data.status == "success"){
+				errormsg.textContent = '';
 				errormsg.textContent = '';
 				successmsg.textContent = 'Account created successfully.';
 			} else {

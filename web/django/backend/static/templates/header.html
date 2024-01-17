@@ -17,7 +17,6 @@
 	<title>Transcendence</title>
 </head>
 <body>
-<<<<<<< HEAD
 
 	<div>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -76,40 +75,6 @@
 					</li>
 				</ul>
 		  </div>
-=======
-	<div class="container">
-		<div id="main">
-			<nav class="navbar">
-				{% if user.is_authenticated and not user.username %}
-					<h1>Hello {{ user.email}}, you need a username</h1>
-				{% elif user.username %}
-					<h1>Hello, {{ user.username }}!</h1>
-					{% else %}
-					<h1>You are not logged in</h1>
-					<a href="{% url 'login' %} ">Login</a>
-					{% endif %}
-					<form action="{% url 'logout' %}" method="post">
-						{% csrf_token %}
-						<button type="submit">Logout</button>
-					</form>
-				<div class="container-fluid">
-					<span class="navbar-brand mb-0 h1">
-						<a href="/"class="btn btn-info " role="button">Home</a>
-						<a href="/game" class="btn btn-info" role="button">Game</a>
-						<a href="/history" class="btn btn-info" role="button">History</a>
-						<a href="/about" class="btn btn-info" role="button">About</a>
-						<a href="/friends" class="btn btn-info" role="button">Friends</a>
-						<a href="/profile" class="btn btn-info" role="button">Profile
-							<img href="/profile" src={{ user.profile_picture.url }} class="rounded-circle" width="50">
-
-						</a>
-						<div>
-						<div>
-					</span>
-				</div>
-			</nav>
-			<div id="content"></div>
->>>>>>> origin/friendrequest
 		</div>
 
 	</div>

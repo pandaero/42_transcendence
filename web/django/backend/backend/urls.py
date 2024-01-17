@@ -19,13 +19,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-<<<<<<< HEAD
-	path('admin', admin.site.urls),
-	path('', views.index_view),
-	path('', include('auth_app.urls'))
-]
-=======
     path('admin/', admin.site.urls),
     path('', include('auth_app.urls'))
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> origin/friendrequest

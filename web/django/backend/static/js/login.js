@@ -1,7 +1,6 @@
 import { getCookie } from "./utils.js";
 import { validateEmail} from "./utils.js";
 
-<<<<<<< HEAD
 console.log("login.js loaded");
 
 let loginBtn = document.getElementById('loginBtn');
@@ -16,15 +15,6 @@ if (loginBtn) {
 	});
 };
 
-=======
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-	e.preventDefault();
-	const email = document.getElementById('email').value;
-	const password = document.getElementById('password').value;
-
-	login(email, password);
-});
->>>>>>> origin/friendrequest
 
 function login(email, password){
 	let errormsg = document.getElementById("errorMsg");
@@ -48,11 +38,7 @@ function login(email, password){
 		"email": email,
 		"password": password
 	}
-<<<<<<< HEAD
 	fetch('/login_view2', {
-=======
-	fetch('/login', {
->>>>>>> origin/friendrequest
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

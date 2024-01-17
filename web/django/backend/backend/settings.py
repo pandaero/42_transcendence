@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # login/logut settings
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'main'
 LOGOUT_REDIRECT_URL = 'login'
 
 # email settings
