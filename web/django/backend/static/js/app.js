@@ -1,4 +1,7 @@
 
+
+
+
 // on refresh handle the routing
 window.onpopstate = function(event) {
 	handleRouting();
@@ -8,15 +11,40 @@ window.onload = function() {
 	handleRouting();
 };
 
-function changeURL(path) {
-	history.pushState({}, '', path);
+function changeURL(path, title, stateObject) {
+	currentJS();
+	history.pushState(stateObject, title, path);
+	handleRouting();
+}	
+
+function unloadEvents(str) {
+	str
+	import(str)
+		.then((module) => {
+			if (module.unload)
+				module.unload().then(() => {
+					console.log("Unloading successful");
+				}).catch((error) => {
+					console.error("Unloading failed:", error);
+				});
+		})
+		.catch((err) => {
+			// Handle the error
+			console.error('Failed to unload module', err);
+		});
 }
+
 
 function loadModule(str) {
 	import(str)
 		.then((module) => {
-			// Use the module
-			console.log('Module loaded ' , str);
+			if (module.init){
+				module.init().then(() => {
+					console.log("Initialization successful");
+				}).catch((error) => {
+					console.log("Initialization failed:", error)
+				});
+			}
 		})
 		.catch((err) => {
 			// Handle the error
@@ -28,14 +56,14 @@ function handleRouting() {
 	let page = window.location.pathname;
 	switch (page) {
 		case '/':
-			console.log('Home page');
 			showPage('main.html');
 			break;
 		case '/game':
-			loadModule('./game/tmpGame.js');
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+			loadModule('./game/tmpGame.js');
 			break;
 		case '/profile':
+			console.log("profile page");
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/history':
@@ -48,13 +76,14 @@ function handleRouting() {
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/register':
-			loadModule('./register.js');
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+			loadModule('./register.js');
 			break;
 		case '/login':
-			loadModule('./login.js');
 			// console.log(`${page.slice(1)} page`);
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+			console.log('login page');
+			loadModule('./login.js');
 			break;
 		default:
 			console.log('Page not found');
@@ -63,8 +92,38 @@ function handleRouting() {
 	}
 }
 
+function currentJS() {
+	let page = window.location.pathname;
+
+	switch (page) {
+		case '/':
+			showPage('main.html');
+			break;
+		case '/game':
+			return('./game/tmpGame.js');
+			break;
+		case '/profile':
+			break;
+		case '/history':
+			break;
+		case '/about':
+			break;
+		case '/settings':
+			break;
+		case '/register':
+			unloadEvents('./register.js');
+			break;
+		case '/login':
+			unloadEvents('./login.js');
+			break;
+		default:
+			break;
+	}
+}
+
+
 function showPage(path) {
-	fetch(path)
+	return fetch(path)
 		.then(response => response.text())
 		.then(data => {
 			document.getElementById('content').innerHTML = data;
@@ -72,11 +131,7 @@ function showPage(path) {
 		.catch(error => console.log(error));
 }
 
-			
-function changeURL(path, title, stateObject) {
-	history.pushState(stateObject, title, path);
-	handleRouting();
-}	
+		
 
 	// part for background change in settings
 	let background = ["none", "/static/images/background.jpg", "/static/images/black.jpg" ];

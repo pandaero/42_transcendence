@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login as auth_login, views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 from django.core.files.base import ContentFile
 from django.shortcuts import redirect
 from urllib.parse import urlparse
@@ -29,7 +30,6 @@ def friends_view(request):
 def game(request):
 	return render(request,'tmpGame.html')
 
-@login_required(login_url='/login/login.html')
 def profile(request):
 	return render(request, 'profile.html')
 

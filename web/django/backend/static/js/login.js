@@ -3,18 +3,46 @@ import { validateEmail} from "./utils.js";
 
 console.log("login.js loaded");
 
-let loginBtn = document.getElementById('loginBtn');
-if (loginBtn) {
-	console.log("login button pressed");
-	let form = document.getElementById('loginForm');
-	loginBtn.addEventListener('click', function(e) {
-		console.log("login button clicked");
-		let email = document.getElementById("email").value;
-		let password = document.getElementById("password").value;
-		login(email, password);
-	});
+let loginBtn;
+
+
+ function loginBtnClickHandler(){
+	console.log("login button clicked");
+	let email = document.getElementById("email").value;
+	let password = document.getElementById("password").value;
+	login(email, password);
 };
 
+export function init() {
+	return new Promise((resolve, reject) => {
+		loginBtn = document.getElementById('loginBtn');
+		if (loginBtn) {
+			console.log("login button found");
+			loginBtn.addEventListener('click', loginBtnClickHandler);
+			// Resolve the promise if everything is successful
+			resolve();
+		} else {
+			// Reject the promise if the login button is not found
+			console.log("login button not found");
+		}
+	});
+}
+
+export function unload() {
+	return new Promise((resolve, reject) => {
+		loginBtn = document.getElementById('loginBtn');
+		if (loginBtn) {
+			loginBtn.removeEventListener('click', loginBtnClickHandler);
+			console.log("login button unloaded");
+			// Resolve the promise if everything is successful
+			resolve();
+		} else {
+			// Reject the promise if the login button is not found
+			reject(new Error("Login button not found"));
+		}
+		loginBtn = null;
+	});
+}
 
 function login(email, password){
 	let errormsg = document.getElementById("errorMsg");
