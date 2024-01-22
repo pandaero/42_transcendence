@@ -1,8 +1,9 @@
-
-
-
-
 // on refresh handle the routing
+
+const content = document.getElementById('content');
+let jsFile;
+
+
 window.onpopstate = function(event) {
 	handleRouting();
 };
@@ -59,11 +60,10 @@ function handleRouting() {
 			showPage('main.html');
 			break;
 		case '/game':
+			jsFile = './game/tmpGame.js';
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			loadModule('./game/tmpGame.js');
 			break;
 		case '/profile':
-			console.log("profile page");
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/history':
@@ -76,14 +76,13 @@ function handleRouting() {
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/register':
+			jsFile = './register.js';
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			loadModule('./register.js');
 			break;
 		case '/login':
 			// console.log(`${page.slice(1)} page`);
+			jsFile = './login.js';
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			console.log('login page');
-			loadModule('./login.js');
 			break;
 		default:
 			console.log('Page not found');
@@ -147,7 +146,13 @@ function showPage(path) {
 		console.log(document.body.style.backgroundImage);
 	}
 
+	
+	const observer = new MutationObserver(() => {
+		if (jsFile) {
+			loadModule(jsFile);
+			jsFile = null;
+		}
+	});
 
-	// document.getElementById('gameButton').addEventListener('click', function() {
-	// 	addStylesheet('styles/game.css');
-	// });
+	
+	observer.observe(content, {childList: true});
