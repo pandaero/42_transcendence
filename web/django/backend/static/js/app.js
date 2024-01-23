@@ -66,7 +66,7 @@ function loadModule(str) {
 // changing the path and content
 async function handleRouting() {
 	let page = window.location.pathname;
-	let user = await fetchUserData();
+	const user = await fetchUserData();
 	switch (page) {
 		case '/':
 			showPage('main.html');
