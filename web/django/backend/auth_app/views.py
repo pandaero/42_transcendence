@@ -53,8 +53,6 @@ def game_result(request):
 
 def login_view(request):
 	if request.method == 'GET':
-		if request.user.is_authenticated:
-			return redirect('main')
 		return render(request, 'login.html')
 	if request.method == 'POST':
 		try:
