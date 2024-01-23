@@ -1,13 +1,13 @@
-import { getCookie } from "./utils.js";
-import { validateEmail} from "./utils.js";
+import { getCookie, validateEmail, validateUsername } from "./utils.js";
 
 console.log("login.js loaded");
 
 let loginBtn;
 
 
- function loginBtnClickHandler(){
+ function loginBtnClickHandler(event){
 	console.log("login button clicked");
+	event.preventDefault();
 	let email = document.getElementById("email").value;
 	let password = document.getElementById("password").value;
 	login(email, password);
@@ -18,12 +18,13 @@ export function init() {
 		loginBtn = document.getElementById('loginBtn');
 		if (loginBtn) {
 			console.log("login button found");
-			loginBtn.addEventListener('click', loginBtnClickHandler);
+			loginBtn.addEventListener('click', (event) => loginBtnClickHandler(event));
 			// Resolve the promise if everything is successful
 			resolve();
 		} else {
 			// Reject the promise if the login button is not found
 			console.log("login button not found");
+			reject(new Error("Login button not found"));
 		}
 	});
 }
@@ -66,7 +67,7 @@ function login(email, password){
 		"email": email,
 		"password": password
 	}
-	fetch('/login_view2', {
+	fetch('/login_view', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -76,10 +77,13 @@ function login(email, password){
 	})
 	.then(response => response.json())
 	.then(data => {
-		if (data.status == "success"){
+	if (data.status == "success"){
+			console.log(data);
+			console.log('success');
 			history.pushState( {Profile: true }, 'Profile page', '/profile');
 			changeURL('/profile', 'Profile page', {Profile: true });
 		} else {
+
 			errormsg.textContent = 'Invalid email or password.';
 		}
 	})

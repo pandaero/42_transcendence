@@ -11,7 +11,7 @@ def create_superuser():
 	password = os.getenv('DB_PASSWORD')
 
 	if not AppUser.objects.filter(email=email).exists():
-		AppUser.objects.create_superuser(email, password)
+		AppUser.objects.create_superuser(email, 'admin', password)
 		print(f"Superuser {email} created")
 	else:
 		print(f"Superuser {email} already exists")

@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.core.files.base import ContentFile
 from django.shortcuts import redirect
 from urllib.parse import urlparse
-from utils import validateEmail, validatePassword
+from utils import validateEmail, validatePassword, validateUsername
 from .models import AppUser, FriendRequest
 import base64
 import uuid
@@ -45,17 +45,17 @@ def main(request):
 def about(request):
 	return render(request, 'about.html')
 
-def login_view(request):
-	if request.user.is_authenticated:
-		return redirect('/main')
-	return render(request, 'login.html')
 
 def game_result(request):
 	eprint(request)
 	eprint("Thats it\n")
 	return JsonResponse({'status':'success'})
 
-def login_view2(request):
+def login_view(request):
+	if request.method == 'GET':
+		if request.user.is_authenticated:
+			return redirect('/main')
+		return render(request, 'login.html')
 	if request.method == 'POST':
 		try:
 			data = json.loads(request.body)
@@ -64,6 +64,7 @@ def login_view2(request):
 			return JsonResponse({'status':'error', 'message':str(request.body)})
 		email = data['email']
 		password = data['password']
+		eprint(data)
 
 		if not validateEmail(email):
 			return JsonResponse({'status':'error', 'message':'Invalid Email.'})
@@ -79,19 +80,21 @@ def login_view2(request):
 			return JsonResponse({'status':'error', 'message': "Invalid credentials."})
 
 def register_view(request):
-	return render(request, 'register.html')
-
-def register_form(request):
+	if request.method == 'GET':
+		return render(request, 'register.html')
 	if request.method == 'POST':
 		data = json.loads(request.body)
 		if not validateEmail(data['email']) and not validatePassword(data['password']):
 			return JsonResponse({'status':'error', 'message':'Invalid Email or password.'})
+		if not validateUsername(data['username']):
+			return JsonResponse({'status': 'error', 'message':'Username not valid'})
 		try:
 			user = AppUser.objects.create_user(
 				email=data['email'],
+				username = data['username'],
 				password=data['password']
 			)
-			return JsonResponse({'status':'success', 'message':'User created successfully.'})
+			return JsonResponse({'status':'success', 'message':'Account created successfully.'})
 		except Exception as e:
 			return JsonResponse({'status':'error', 'message':str(e)})
 

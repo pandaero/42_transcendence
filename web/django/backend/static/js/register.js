@@ -1,5 +1,4 @@
-import { validateEmail, validatePassword } from "./utils.js";
-import { getCookie } from "./utils.js";
+import { validateEmail, validatePassword, getCookie, validateUsername } from "./utils.js";
 
 console.log("register.js loaded");
 
@@ -8,8 +7,9 @@ let registerBtn;
 let registerBtnClickHandler = function(e) {
 	console.log("register button clicked");
 	let email = document.getElementById("email").value;
+	let username = document.getElementById("username").value;
 	let password = document.getElementById("password").value;
-	register(email, password);
+	register(email, username, password);
 };
 export function init() {
 	return new Promise((resolve, reject) => {
@@ -42,9 +42,7 @@ export function unload(){
 	});
 }
 
-function register(email, password){
-	// e.preventDefault();
-	console.log("almost at fetch");
+function register(email, username, password){
 	let errormsg = document.getElementById("errorMsg");
 	let successmsg = document.getElementById("successMsg");
 	
@@ -53,7 +51,10 @@ function register(email, password){
 			return;
 		}
 
-		// let user_regx = /^[a-zA-Z0-9]+$/;
+		if(!validateUsername(username)){
+			errormsg.textContent = 'Invalid username.';
+			return;
+		}
 
 		if (!validatePassword(password)){
 			errormsg.textContent = 'Password must contain\n8 characters, 1 capital letter, 1 lowercase and 1 special character.';
@@ -61,6 +62,7 @@ function register(email, password){
 		}
 		let data = {
 			"email": email,
+			"username" : username,
 			"password": password
 		}
 		fetch('/register/form', {
@@ -76,7 +78,7 @@ function register(email, password){
 			if (data.status == "success"){
 				errormsg.textContent = '';
 				errormsg.textContent = '';
-				successmsg.textContent = 'Account created successfully.';
+				successmsg.textContent = data.message;
 			} else {
 				successmsg.textContent = '';
 				errormsg.textContent = 'Email or username already exists.';

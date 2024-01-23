@@ -5,20 +5,11 @@
     <title>Login</title>
 </head>
 <body>
-    {% if user.is_authenticated and not user.username %}
-        <h1>Hello {{ user.email}}, you need a username</h1>
-    {% elif user.username %}
-        <h1>Hello, {{ user.username }}!</h1>
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-    {% else %}
-        <h1>Login</h1>
-    {% endif %}
+    <h1>Login</h1>
 
     <div>
         <form method="post" id="loginForm">
+            {% csrf_token %}
             <div>
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
@@ -43,6 +34,9 @@
             </a>
         </div>
     </div>
+    {% if user.is_authenticated %}
+        KURVA ANYAD
+    {% endif %}
 
     <script defer type='module' src="{% static 'js/login.js' %}"></script>
 </body>

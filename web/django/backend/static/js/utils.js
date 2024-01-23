@@ -22,3 +22,10 @@ export function validatePassword(password){
 	let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.,?<>"';:-_=+\|/`~])(?=.*\d).{8,}$/;
 	return regex.test(password);
 }
+
+export function validateUsername(username){
+	if(username.length < 3 || /\s/.test(username)){
+		return false;
+	}
+	return true
+}

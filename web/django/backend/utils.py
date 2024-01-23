@@ -12,3 +12,7 @@ def validatePassword(password):
 		return True
 	return False
 
+def validateUsername(username):
+	if len(username) < 3 or ' ' in username:
+		return False
+	return True
