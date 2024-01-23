@@ -54,7 +54,7 @@ def game_result(request):
 def login_view(request):
 	if request.method == 'GET':
 		if request.user.is_authenticated:
-			return redirect('/main')
+			return redirect('main')
 		return render(request, 'login.html')
 	if request.method == 'POST':
 		try:
@@ -173,6 +173,18 @@ def decline_friend_request_view(request, friend_request_id):
 		if friend_request.receiver == request.user:
 			friend_request.delete()
 			return JsonResponse({'status': 'success', 'message':'Friend request declined.'})
+
+def getUserData_view(request):
+	if request.user.is_authenticated:
+		user_data = {
+			'authenticated': True,
+			'email' : request.user.email,
+			'username' : request.user.username,
+		}
+	else:
+		user_data = {'authenticated': False}
+	return JsonResponse({'user': user_data})
+	
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
 	template_name = 'password_reset_form.html'

@@ -12,6 +12,17 @@ window.onload = function() {
 	handleRouting();
 };
 
+async function fetchUserData(){
+	try {
+		const response = await fetch('/getUserData');
+		const data = await response.json();
+		return data.user;
+	} catch (error){
+		console.error('Error fetching user data', error);
+		return null;
+	}
+}
+
 function changeURL(path, title, stateObject) {
 	currentJS();
 	history.pushState(stateObject, title, path);
@@ -53,8 +64,9 @@ function loadModule(str) {
 		});
 }
 // changing the path and content
-function handleRouting() {
+async function handleRouting() {
 	let page = window.location.pathname;
+	let user = await fetchUserData();
 	switch (page) {
 		case '/':
 			showPage('main.html');
@@ -81,6 +93,11 @@ function handleRouting() {
 			break;
 		case '/login':
 			// console.log(`${page.slice(1)} page`);
+			if (user.authenticated){
+				changeURL('/', 'Main Page', {main : true});
+				showPage('main.html')
+				break;
+			}
 			jsFile = './login.js';
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
@@ -91,9 +108,10 @@ function handleRouting() {
 	}
 }
 
-function currentJS() {
+async function currentJS() {
 	let page = window.location.pathname;
-
+	const user = await fetchUserData();
+	console.log("here");
 	switch (page) {
 		case '/':
 			showPage('main.html');
@@ -113,7 +131,8 @@ function currentJS() {
 			unloadEvents('./register.js');
 			break;
 		case '/login':
-			unloadEvents('./login.js');
+			if (!user.authenticated)
+				unloadEvents('./login.js');
 			break;
 		default:
 			break;
