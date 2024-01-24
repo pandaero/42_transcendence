@@ -87,20 +87,31 @@ async function handleRouting() {
 		case '/settings':
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
+		case '/friends':
+			if (user.authenticated){
+				jsFile='./friend_request.js';
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+			}
+			else{
+				changeURL('/login', 'Login Page', {main : true});
+				showPage('/login');
+				break;
+			}
+			break;
 		case '/register':
 			jsFile = './register.js';
 			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 			break;
 		case '/login':
-			// console.log(`${page.slice(1)} page`);
+		// console.log(`${page.slice(1)} page`);
 			if (user.authenticated){
 				changeURL('/', 'Main Page', {main : true});
-				showPage('main.html')
+				showPage('main.html');
 				break;
-			}
-			jsFile = './login.js';
-			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			break;
+				}
+				jsFile = './login.js';
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				break;
 		default:
 			console.log('Page not found');
 			console.log(window.location.pathname);
@@ -111,7 +122,6 @@ async function handleRouting() {
 async function currentJS() {
 	let page = window.location.pathname;
 	const user = await fetchUserData();
-	console.log("here");
 	switch (page) {
 		case '/':
 			showPage('main.html');
@@ -127,6 +137,9 @@ async function currentJS() {
 			break;
 		case '/settings':
 			break;
+		case '/friends':
+			unloadEvents('./friend_request.js');
+			break;
 		case '/register':
 			unloadEvents('./register.js');
 			break;
@@ -140,8 +153,8 @@ async function currentJS() {
 }
 
 
-function showPage(path) {
-	return fetch(path)
+async function showPage(path) {
+	return await fetch(path)
 		.then(response => response.text())
 		.then(data => {
 			document.getElementById('content').innerHTML = data;

@@ -20,12 +20,6 @@ def header_view(request):
 	return render(request,'header.html')
 	
 
-def friends_view(request):
-	if request.method == 'GET':
-		friend_requests = FriendRequest.objects.filter(receiver=request.user)
-		exclude_users = friend_requests.values_list('sender', flat=True)
-		users = AppUser.objects.exclude(user_id__in=exclude_users)
-		return render (request, 'friends.html', {'users': users, 'friend_requests' : friend_requests})
 
 def game(request):
 	return render(request,'tmpGame.html')
@@ -136,6 +130,12 @@ def settings_view(request):
 
 		return JsonResponse({'status':'success', 'message':'Settings updated successfully.'})
 
+def friends_view(request):
+	if request.method == 'GET':
+		friend_requests = FriendRequest.objects.filter(receiver=request.user)
+		exclude_users = friend_requests.values_list('sender', flat=True)
+		users = AppUser.objects.exclude(user_id__in=exclude_users)
+		return render (request, 'friends.html', {'users': users, 'friend_requests' : friend_requests})
 
 def send_friend_request_view(request, user_id):
 	if request.method == 'POST':
@@ -143,6 +143,8 @@ def send_friend_request_view(request, user_id):
 		print(request.user, file=sys.stderr)
 		to_user = AppUser.objects.get(user_id=user_id)
 		print(to_user, file=sys.stderr)
+		print(f"user_id: {user_id}", file=sys.stderr)
+
 		friend_requests, created = FriendRequest.objects.get_or_create(sender=from_user, receiver=to_user)
 		if created:
 			return JsonResponse({'status':'success', 'message':'Friend request sent successfully.'})
