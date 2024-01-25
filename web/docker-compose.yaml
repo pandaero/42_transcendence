@@ -34,4 +34,14 @@ services:
       - .env
     restart: on-failure
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "7000:7000"
+    volumes:
+    - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - django_web
+      restart: on-failure
 
