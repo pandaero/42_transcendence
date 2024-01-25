@@ -1,13 +1,77 @@
+import { init } from "./register.js";
 import { getCookie } from "./utils.js";
 
 
-var acceptButtons = document.querySelectorAll('.accept-button');
-var declineButtons = document.querySelectorAll('.decline-button');
-var addFriendButtons = document.querySelectorAll('.add_friend-button');
-let successMsg = document.getElementById('successMsg');
-let successSentMsg = document.getElementById('friend-request-sent');
-let alreadySentMsg = document.getElementById('alreadySent');
-let declineMsg = document.getElementById('declineMsg');
+let acceptButtons;
+let declineButtons;
+let addFriendButtons;
+let successMsg;
+let successSentMsg;
+let alreadySentMsg;
+let declineMsg;
+
+
+export function init() {
+	acceptButtons = document.querySelectorAll('.accept-button');
+	declineButtons = document.querySelectorAll('.decline-button');
+	addFriendButtons = document.querySelectorAll('.add_friend-button');
+	successMsg = document.getElementById('successMsg');
+	successSentMsg = document.getElementById('friend-request-sent');
+	alreadySentMsg = document.getElementById('alreadySent');
+	declineMsg = document.getElementById('declineMsg');
+
+	acceptButtons.forEach(function(button){
+		button.addEventListener('click', function(event) {
+			console.log("1");
+			handleSubmit(event, button);
+		});
+	});
+	
+	declineButtons.forEach(function(button){
+		button.addEventListener('click', function(event) {
+			console.log("2");
+			handleSubmit(event, button);
+		});
+	});
+	
+	addFriendButtons.forEach(function(button){
+		button.addEventListener('click', function(event) {
+			console.log("3");
+			handleSubmit(event, button);
+		});
+	});
+};
+
+
+export function unload(){
+	return new Promise((resolve, reject) => {
+
+		successMsg = null;
+		successSentMsg = null;
+		alreadySentMsg = null;
+		declineMsg = null;
+
+		if (acceptButtons) {
+			acceptButtons.forEach(function(button){
+				button.removeEventListener('click', handleSubmit);
+			})};
+		if (declineButtons){
+			declineButtons.forEach(function(button){
+				button.removeEventListener('click', handleSubmit);
+			})};
+		if (addFriendButtons){
+			addFriendButtons.forEach(function(button){
+				button.removeEventListener('click', handleSubmit);
+			});
+
+		} else {
+			// Reject the promise if the login button is not found
+			reject(new Error("accept button not found"));
+		}
+		acceptButtons = null;
+		declineButtons = null;
+		addFriendButtons = null;
+	})};
 
 function handleSubmit(event, button){
 	event.preventDefault();
@@ -74,24 +138,3 @@ function handleSubmit(event, button){
 		declineMsg.textContent = "Friend request already declined.";
 	}
 };
-
-acceptButtons.forEach(function(button){
-	button.addEventListener('click', function(event) {
-		console.log("1");
-		handleSubmit(event, button);
-	});
-});
-
-declineButtons.forEach(function(button){
-	button.addEventListener('click', function(event) {
-		console.log("2");
-		handleSubmit(event, button);
-	});
-});
-
-addFriendButtons.forEach(function(button){
-	button.addEventListener('click', function(event) {
-		console.log("3");
-		handleSubmit(event, button);
-	});
-});
