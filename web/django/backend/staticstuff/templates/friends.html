@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	{% load static %}
+<head>
+	<title>Friends</title>
+</head>
+<body>
+	<div class="friend_requests">
+		<h1>Friend requests:</h1>
+		{% for friend_request in friend_requests %}
+			{{ friend_request.sender }}
+			<form class="friend_request_form" action="accept_friend_request/{{ friend_request.id }}" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="request_id" value="{{ friend_request.id }}" method="post">
+				<button type="submit" class="accept-button" data-user-id="{{ friend_request.id }}">Accept</button>
+			</form>
+			<form class="friend_request_form" action="decline_friend_request/{{ friend_request.id }}" method="post">
+				{% csrf_token%}
+				<input type="hidden" name="request_id" value="{{ friend_request.id }}" method="post">
+				<button type="submit", class="decline-button" data-user-id={{ friend_request.id}}>Decline</button>
+			</form>
+		{% endfor %} 
+		</br>
+	</div>
+	<span id="successMsg" style="color: green;"></span>
+	<span id="declineMsg" style="color: red"></span>
+	<div class="all_users">
+		<h1>All Users:</h1>
+		{% for user in users %}
+			{% if not user.is_superuser %}
+				{% if user not in request.user.friends.all and user != request.user%}
+				<form class='friend_request_send' action="send_friend_request/{{ user.user_id }}" method="post">
+					{% csrf_token %}
+					<input type="hidden" id="value" name="request_id" value="{{ user.user_id }}">
+					{{ user }} <button type="submit" class='add_friend-button' data-user-id="{{ user.user_id }}">Add friend</button><br>
+					{{user.user_id}}
+				</form>
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+	</div>
+	<span id="friend-request-sent" style="color: green;"></span> 
+	<span id="alreadySent" style="color: red;"></span>
+	<div class="friends">
+		<h1>My friends:</h1>
+		{% for user in request.user.friends.all%}
+			<a href="/profile/{{ user }}">{{ user }}</a> <br>
+		{% endfor %}
+	</div>
+<script type='module' src="{% static '/js/friend_request.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+body{
+	text-align: center;
+	background-color: antiquewhite;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	flex-direction: column;
+	position:fixed;
+	width: 100%;
+}

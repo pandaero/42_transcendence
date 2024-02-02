@@ -24,10 +24,13 @@ services:
       context: ./django
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "7000:7000"
+    networks:
+      - t_network
     volumes:
       - ./django/backend:/code
       - ./django/start.sh:/code/start.sh
+      - static_volume:/code/staticstuff
     depends_on:
       - postgres
     env_file:
@@ -35,13 +38,23 @@ services:
     restart: on-failure
 
   nginx:
-    image: nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: nginx
-    ports:
-      - "7000:7000"
+    networks:
+      - t_network
     volumes:
-    - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/code/staticstuff
+    ports:
+      - "443:443"
+      - "8000:8000"
     depends_on:
-      - django_web
-      restart: on-failure
+      - django
+    restart: on-failure
 
+volumes:
+  static_volume:
+
+networks:
+  t_network:
