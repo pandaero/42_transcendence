@@ -17,7 +17,7 @@
 			<form class="friend_request_form" action="decline_friend_request/{{ friend_request.id }}" method="post">
 				{% csrf_token%}
 				<input type="hidden" name="request_id" value="{{ friend_request.id }}" method="post">
-				<button type="submit", class="decline-button" data-user-id={{ friend_request.id}}>Decline</button>
+				<button type="submit" class="decline-button" data-user-id={{ friend_request.id}}>Decline</button>
 			</form>
 		{% endfor %} 
 		</br>
@@ -27,14 +27,15 @@
 	<div class="all_users">
 		<h1>All Users:</h1>
 		{% for user in users %}
-			{% if not user.is_superuser %}
-				{% if user not in request.user.friends.all and user != request.user%}
-				<form class='friend_request_send' action="send_friend_request/{{ user.user_id }}" method="post">
-					{% csrf_token %}
-					<input type="hidden" id="value" name="request_id" value="{{ user.user_id }}">
-					{{ user }} <button type="submit" class='add_friend-button' data-user-id="{{ user.user_id }}">Add friend</button><br>
-					{{user.user_id}}
-				</form>
+		{% if not user.is_superuser %}
+		{% if user not in request.user.friends.all and user != request.user%}
+		<ul>
+			<form class='friend_request_send' action="send_friend_request/{{ user.user_id }}" method="post">
+							{% csrf_token %}
+							<li/><input type="hidden" id="value" name="request_id" value="{{ user.user_id }}">
+							{{ user }} <button type="submit" class='add_friend-button' data-user-id="{{ user.user_id }}">Add friend</button><br>
+						</form>
+					</ul>
 				{% endif %}
 			{% endif %}
 		{% endfor %}

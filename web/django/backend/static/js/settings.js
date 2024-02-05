@@ -1,18 +1,64 @@
-import { getCookie } from "./utils.js";
-import { validateEmail } from "./utils.js";
-import { validatePassword } from "./utils.js";
+import { getCookie, validateEmail, validatePassword } from "./utils.js";
 
-document.getElementById('settingsForm').addEventListener('submit', function(e) {
-	e.preventDefault(); // Prevents the default form submit action
-	const email = document.getElementById("email").value;
-	const username = document.getElementById("username").value;
-	const profile_picture = document.getElementById("profile_picture").files[0];
-	const password = document.getElementById("password").value;
-	const confirm_password = document.getElementById("confirm_password").value;
+let submitButton;
+
+function submitButtonHandler(event){
+	event.preventDefault();
+	let email = document.getElementById("email").value;
+	let username = document.getElementById("username").value;
+	
+	let profile_picture_input = document.getElementById("selected_picture");
+	let profile_picture = profile_picture_input && profile_picture_input.files && profile_picture_input.files[0];
+
+	let password = document.getElementById("password").value;
+	let confirm_password = document.getElementById("confirm_password").value;
 
 	settings(email, username, profile_picture, password, confirm_password);
-})
+}
 
+export function init() {
+	return new Promise((resolve, reject) => {
+		submitButton = document.getElementById('submitButton');
+		if (submitButton){
+			submitButton.addEventListener('click', (event) => submitButtonHandler(event));
+			resolve();
+		}else{
+			reject(new Error("Submit button not found"));
+		}
+	});
+};
+
+export function unload(){
+	return new Promise((resolve, reject) => {
+
+		successMsg = null;
+		successSentMsg = null;
+		alreadySentMsg = null;
+		declineMsg = null;
+
+		if (acceptButtons) {
+			acceptButtons.forEach(function(button){
+				button.removeEventListener('click', handleSubmit);
+			})};
+		if (declineButtons){
+			declineButtons.forEach(function(button){
+				button.removeEventListener('click', handleSubmit);
+			})};
+		if (addFriendButtons){
+			addFriendButtons.forEach(function(button){
+				button.removeEventListener('click', handleSubmit);
+			});
+		
+		} else {
+			resolve();
+			// Reject the promise if the login button is not found
+			reject(new Error("accept button not found"));
+		}
+		acceptButtons = null;
+		declineButtons = null;
+		addFriendButtons = null;
+		console.log("settings unload");
+	})};
 
 async function settings(email, username, profile_picture, password, confirm_password) {
 	let csrf_token = getCookie("csrftoken");
@@ -53,11 +99,11 @@ async function settings(email, username, profile_picture, password, confirm_pass
 	if (profile_picture) {
 		const validImageExtensions = ['jpg', 'jpeg', 'png', 'bmp'];
 		const extension = profile_picture.name.split('.').pop().toLowerCase();
-		
 		if (!validImageExtensions.includes(extension)) {
-		errorMsg.textContent = 'Invalid profile picture format. Allowed formats are jpg, jpeg, png, gif, bmp.';
-		return;
+			errorMsg.textContent = 'Invalid profile picture format. Allowed formats are jpg, jpeg, png, gif, bmp.';
+			return;
 		}
+		console.log("before basing");
 		try{
 			const base64 = await new Promise((resolve, reject) => {
 				const reader = new FileReader();
@@ -73,9 +119,8 @@ async function settings(email, username, profile_picture, password, confirm_pass
 			return;
 		}
 	};
-
 	try {
-		const response = await fetch('/settings', {
+		const response = await fetch('/settings/settings.html', {
 		  method: 'POST',
 		  headers: {
 			'Content-Type': 'application/json',
@@ -84,7 +129,7 @@ async function settings(email, username, profile_picture, password, confirm_pass
 		  body: JSON.stringify(data)
 		});
 		const responseData = await response.json();
-
+		console.log("are we at 128?");
 		if (responseData.status === "success") {
 			errorMsg.textContent = '';
 			successMsg.textContent = responseData.message;

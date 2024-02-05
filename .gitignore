@@ -2,3 +2,4 @@ web/postgresql/data
 venv/
 */__pycache__
 *.pyc
+web/django/backend/media

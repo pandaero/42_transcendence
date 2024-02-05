@@ -12,8 +12,10 @@ urlpatterns = [
 	path('login/login.html', views.login_view, name='login_view'),
 	path('login_view', views.login_view, name='login_view_form'),
 	path('logout', auth_views.LogoutView.as_view(), name='logout'),
-	path('friends', views.friends_view, name='friends'),
-	path('settings', views.settings_view, name='settings'),
+	path('friends', views.header_view, name='friends'),
+	path("friends/friends.html", views.friends_view, name="friends_view"),
+	path('settings', views.header_view),
+	path('settings/settings.html', views.settings_view, name='settings'),
 	path('send_friend_request/<int:user_id>', views.send_friend_request_view, name='send_friend_request'),
 	path('accept_friend_request/<int:friend_request_id>', views.accept_friend_request_view, name='accept_friend_request'),
 	path('decline_friend_request/<int:friend_request_id>', views.decline_friend_request_view, name='decline_friend_request'),
@@ -30,7 +32,8 @@ urlpatterns = [
 	path('history', views.header_view),
 	path('history/history.html', views.history),
 	path('settings', views.header_view,),
-	path('settings/settings.html', views.settings),
+	path('settings/settings.html', views.settings_view),
 	path('about', views.header_view),
 	path('about/about.html', views.about),
+	path('getUserData', views.getUserData_view, name='fetch_user_data')
 ]

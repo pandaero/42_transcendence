@@ -45,7 +45,7 @@ export function unload() {
 	});
 }
 
-function login(email, password){
+async function login(email, password){
 	let errormsg = document.getElementById("errorMsg");
 
 	if (email == ""){
@@ -67,25 +67,34 @@ function login(email, password){
 		"email": email,
 		"password": password
 	}
-	fetch('/login_view', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			'X-CSRFToken': getCookie('csrftoken')
-		},
-		body: JSON.stringify(data)
-	})
-	.then(response => response.json())
-	.then(data => {
-	if (data.status == "success"){
-			console.log(data);
-			console.log('success');
-			history.pushState( {Profile: true }, 'Profile page', '/profile');
-			changeURL('/profile', 'Profile page', {Profile: true });
-		} else {
+	try{
+		const loginResponse = await fetch('/login_view', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+			body: JSON.stringify(data)
+		});
 
+		const loginData = await loginResponse.json();
+
+		if (loginData.status === 'success'){
+			try{
+				changeURL('/profile', 'Profile page', {Profile: true});
+			} catch (profileError){
+				console.error("Error loading profile", profileError);
+			}
+		} else {
 			errormsg.textContent = 'Invalid email or password.';
 		}
-	})
+	} catch (error){
+		console.error("Error during login.", error);
+	}
+}
 
+function changeURL(path, title, stateObject) {
+	currentJS();
+	history.pushState(stateObject, title, path);
+	handleRouting();
 }

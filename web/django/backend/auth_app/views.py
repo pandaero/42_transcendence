@@ -20,12 +20,6 @@ def header_view(request):
 	return render(request,'header.html')
 	
 
-def friends_view(request):
-	if request.method == 'GET':
-		friend_requests = FriendRequest.objects.filter(receiver=request.user)
-		exclude_users = friend_requests.values_list('sender', flat=True)
-		users = AppUser.objects.exclude(user_id__in=exclude_users)
-		return render (request, 'friends.html', {'users': users, 'friend_requests' : friend_requests})
 
 def game(request):
 	return render(request,'tmpGame.html')
@@ -36,8 +30,6 @@ def profile(request):
 def history(request):
 	return render(request, 'history.html')
 
-def settings(request):
-	return render(request, 'settings.html')
 
 def main(request):
 	return render(request, 'main.html')
@@ -47,14 +39,10 @@ def about(request):
 
 
 def game_result(request):
-	eprint(request)
-	eprint("Thats it\n")
 	return JsonResponse({'status':'success'})
 
 def login_view(request):
 	if request.method == 'GET':
-		if request.user.is_authenticated:
-			return redirect('/main')
 		return render(request, 'login.html')
 	if request.method == 'POST':
 		try:
@@ -64,8 +52,6 @@ def login_view(request):
 			return JsonResponse({'status':'error', 'message':str(request.body)})
 		email = data['email']
 		password = data['password']
-		eprint(data)
-
 		if not validateEmail(email):
 			return JsonResponse({'status':'error', 'message':'Invalid Email.'})
 
@@ -103,10 +89,10 @@ def settings_view(request):
 		return render(request, 'settings.html')
 	
 	elif request.method == 'POST':
+		print("line 92", file=sys.stderr)
 		data = json.loads(request.body)
 		user_id = request.user.user_id
 		user = AppUser.objects.get(user_id=user_id)
-
 		try:
 			if 'email' in data:
 				new_email = data['email']
@@ -122,8 +108,9 @@ def settings_view(request):
 				user.save()
 		except:
 			return JsonResponse({'status':'error', 'message':'Username already exists.'})
-
+		eprint("we are outside of the if")
 		if 'profile_picture' in data:
+			eprint("we are saving");
 			imgstr = data['profile_picture']
 			image_data = base64.b64decode(imgstr)
 			
@@ -135,9 +122,16 @@ def settings_view(request):
 			new_password = data['password']
 			user.set_password(new_password)
 			user.save()
+		eprint("at the end")
 
 		return JsonResponse({'status':'success', 'message':'Settings updated successfully.'})
 
+def friends_view(request):
+	if request.method == 'GET':
+		friend_requests = FriendRequest.objects.filter(receiver=request.user)
+		exclude_users = friend_requests.values_list('sender', flat=True)
+		users = AppUser.objects.exclude(user_id__in=exclude_users)
+		return render (request, 'friends.html', {'users': users, 'friend_requests' : friend_requests})
 
 def send_friend_request_view(request, user_id):
 	if request.method == 'POST':
@@ -145,6 +139,8 @@ def send_friend_request_view(request, user_id):
 		print(request.user, file=sys.stderr)
 		to_user = AppUser.objects.get(user_id=user_id)
 		print(to_user, file=sys.stderr)
+		print(f"user_id: {user_id}", file=sys.stderr)
+
 		friend_requests, created = FriendRequest.objects.get_or_create(sender=from_user, receiver=to_user)
 		if created:
 			return JsonResponse({'status':'success', 'message':'Friend request sent successfully.'})
@@ -173,6 +169,19 @@ def decline_friend_request_view(request, friend_request_id):
 		if friend_request.receiver == request.user:
 			friend_request.delete()
 			return JsonResponse({'status': 'success', 'message':'Friend request declined.'})
+
+def getUserData_view(request):
+	if request.user.is_authenticated:
+		user_data = {
+			'authenticated': True,
+			'email' : request.user.email,
+			'username' : request.user.username,
+			'profile_picture' : request.user.profile_picture.url
+		}
+	else:
+		user_data = {'authenticated': False}
+	return JsonResponse({'user': user_data})
+	
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
 	template_name = 'password_reset_form.html'
