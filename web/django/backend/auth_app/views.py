@@ -30,8 +30,6 @@ def profile(request):
 def history(request):
 	return render(request, 'history.html')
 
-def settings(request):
-	return render(request, 'settings.html')
 
 def main(request):
 	return render(request, 'main.html')
@@ -41,8 +39,6 @@ def about(request):
 
 
 def game_result(request):
-	eprint(request)
-	eprint("Thats it\n")
 	return JsonResponse({'status':'success'})
 
 def login_view(request):
@@ -56,8 +52,6 @@ def login_view(request):
 			return JsonResponse({'status':'error', 'message':str(request.body)})
 		email = data['email']
 		password = data['password']
-		eprint(data)
-
 		if not validateEmail(email):
 			return JsonResponse({'status':'error', 'message':'Invalid Email.'})
 
@@ -95,10 +89,10 @@ def settings_view(request):
 		return render(request, 'settings.html')
 	
 	elif request.method == 'POST':
+		print("line 92", file=sys.stderr)
 		data = json.loads(request.body)
 		user_id = request.user.user_id
 		user = AppUser.objects.get(user_id=user_id)
-
 		try:
 			if 'email' in data:
 				new_email = data['email']
@@ -114,8 +108,9 @@ def settings_view(request):
 				user.save()
 		except:
 			return JsonResponse({'status':'error', 'message':'Username already exists.'})
-
+		eprint("we are outside of the if")
 		if 'profile_picture' in data:
+			eprint("we are saving");
 			imgstr = data['profile_picture']
 			image_data = base64.b64decode(imgstr)
 			
@@ -127,6 +122,7 @@ def settings_view(request):
 			new_password = data['password']
 			user.set_password(new_password)
 			user.save()
+		eprint("at the end")
 
 		return JsonResponse({'status':'success', 'message':'Settings updated successfully.'})
 
@@ -180,6 +176,7 @@ def getUserData_view(request):
 			'authenticated': True,
 			'email' : request.user.email,
 			'username' : request.user.username,
+			'profile_picture' : request.user.profile_picture.url
 		}
 	else:
 		user_data = {'authenticated': False}

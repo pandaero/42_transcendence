@@ -30,7 +30,6 @@ function changeURL(path, title, stateObject) {
 }	
 
 function unloadEvents(str) {
-	str
 	import(str)
 		.then((module) => {
 			if (module.unload)
@@ -49,85 +48,91 @@ function unloadEvents(str) {
 
 function loadModule(str) {
 	import(str)
-		.then((module) => {
-			if (module.init){
-				module.init().then(() => {
-					console.log("Initialization successful");
-				}).catch((error) => {
-					console.log("Initialization failed:", error)
-				});
-			}
-		})
-		.catch((err) => {
-			// Handle the error
-			console.error('Failed to load module', err);
-		});
+	.then((module) => {
+		if (module.init){
+			module.init();
+			console.log("Initialization successful");
+		}
+	})
+	.catch((err) => {
+		// Handle the error
+		console.error('Failed to load module', err);
+	});
 }
 // changing the path and content
 async function handleRouting() {
 	let page = window.location.pathname;
-	const user = await fetchUserData();
-	switch (page) {
-		case '/':
-			showPage('main.html');
-			break;
-		case '/game':
-			jsFile = './game/tmpGame.js';
-			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			break;
-		case '/profile':
-			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			break;
-		case '/history':
-			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			break;
-		case '/about':
-			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			break;
-		case '/settings':
-			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			break;
-		case '/friends':
-			if (user.authenticated){
-				jsFile='./friend_request.js';
-				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			}
-			else{
-				changeURL('/login', 'Login Page', {main : true});
-				showPage('/login');
-				break;
-			}
-			break;
-		case '/register':
-			jsFile = './register.js';
-			showPage(`${page.slice(1)}/${page.slice(1)}.html`);
-			break;
-		case '/login':
-		// console.log(`${page.slice(1)} page`);
-			if (user.authenticated){
-				changeURL('/', 'Main Page', {main : true});
+	try{
+		const user = await fetchUserData();
+		
+		if (user.authenticated){
+			document.getElementById('profile_picture').src = user.profile_picture;
+		}
+
+		switch (page) {
+			case '/':
 				showPage('main.html');
 				break;
+			case '/game':
+				jsFile = './game/tmpGame.js';
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				break;
+			case '/profile':
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				break;
+			case '/history':
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				break;
+			case '/about':
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				break;
+			case '/settings':
+				jsFile='./settings.js';
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				break;
+			case '/friends':
+				if (user.authenticated){
+					jsFile='./friend_request.js';
+					showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				}
+				else{
+					changeURL('/login', 'Login Page', {main : true});
+					showPage('/login');
+					break;
+				}
+				break;
+			case '/register':
+				jsFile = './register.js';
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				break;
+			case '/login':
+				if (user.authenticated){
+					changeURL('/', 'Main Page', {main : true});
+					showPage('main.html');
+					break;
 				}
 				jsFile = './login.js';
 				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 				break;
-		default:
-			console.log('Page not found');
-			console.log(window.location.pathname);
-		break;
+			default:
+				console.log('Page not found');
+				console.log(window.location.pathname);
+				break;
+			}
+	} catch (error) {
+		console.error('Error handling routing: ', error);
 	}
 }
 
 async function currentJS() {
 	let page = window.location.pathname;
 	const user = await fetchUserData();
+	console.log("unload events");
 	switch (page) {
 		case '/':
 			showPage('main.html');
 			break;
 		case '/game':
-			return('./game/tmpGame.js');
 			break;
 		case '/profile':
 			break;
@@ -138,7 +143,8 @@ async function currentJS() {
 		case '/settings':
 			break;
 		case '/friends':
-			unloadEvents('./friend_request.js');
+			if (user.authenticated)
+				unloadEvents('./friend_request.js');
 			break;
 		case '/register':
 			unloadEvents('./register.js');
@@ -162,29 +168,27 @@ async function showPage(path) {
 		.catch(error => console.log(error));
 }
 
-		
+// part for background change in settings
+let background = ["none", "/static/images/background.jpg", "/static/images/black.jpg" ];
+let i = 0;
 
-	// part for background change in settings
-	let background = ["none", "/static/images/background.jpg", "/static/images/black.jpg" ];
-	let i = 0;
-	
-	function changeBg() {
-		i = (i + 1) % background.length; 
-		if (background[i] === "none") {
-		document.body.style.backgroundImage = background[i];
-		} else {
-		document.body.style.backgroundImage = `url(${background[i]})`;
-		}
-		console.log(document.body.style.backgroundImage);
+function changeBg() {
+	i = (i + 1) % background.length; 
+	if (background[i] === "none") {
+	document.body.style.backgroundImage = background[i];
+	} else {
+	document.body.style.backgroundImage = `url(${background[i]})`;
 	}
+	console.log(document.body.style.backgroundImage);
+}
 
-	
-	const observer = new MutationObserver(() => {
-		if (jsFile) {
-			loadModule(jsFile);
-			jsFile = null;
-		}
-	});
 
-	
-	observer.observe(content, {childList: true});
+const observer = new MutationObserver(() => {
+	if (jsFile) {
+		loadModule(jsFile);
+		jsFile = null;
+	}
+});
+
+
+observer.observe(content, {childList: true});

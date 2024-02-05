@@ -1,4 +1,3 @@
-import { init } from "./register.js";
 import { getCookie } from "./utils.js";
 
 
