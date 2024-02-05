@@ -28,7 +28,7 @@ def friends_view(request):
 		return render (request, 'friends.html', {'users': users, 'friend_requests' : friend_requests})
 
 def game(request):
-	return render(request,'tmpGame.html')
+	return render(request,'game.html')
 
 def profile(request):
 	return render(request, 'profile.html')
