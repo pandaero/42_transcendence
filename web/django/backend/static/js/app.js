@@ -87,8 +87,15 @@ async function handleRouting() {
 				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
 				break;
 			case '/settings':
-				jsFile='./settings.js';
-				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				if (user.authenticated){
+					jsFile='./settings.js';
+					showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				} 
+				else{
+					changeURL('/login', 'Login Page', {main : true});
+					showPage('/login');
+					break;
+				}
 				break;
 			case '/friends':
 				if (user.authenticated){
@@ -169,7 +176,7 @@ async function showPage(path) {
 }
 
 // part for background change in settings
-let background = ["none", "/static/images/background.jpg", "/static/images/black.jpg" ];
+let background = ["none", "/staticstuff/images/background.jpg", "/staticstuff/images/black.jpg" ];
 let i = 0;
 
 function changeBg() {

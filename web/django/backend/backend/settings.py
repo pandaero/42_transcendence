@@ -55,6 +55,26 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://localhost",
+    "http://localhost",
+    "http://127.0.0.1",
+    "https://127.0.0.1",
+]
+
+CSRF_ALLOWED_ORIGINS = [
+    "https://localhost",
+    "http://localhost",
+    "http://127.0.0.1",
+    "https://127.0.0.1",
+]
+CORS_ORIGINS_WHITELIST = [
+    "https://localhost",
+    "http://localhost",
+    "http://127.0.0.1",
+    "https://127.0.0.1",
+]
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
@@ -144,8 +164,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_URL = '/staticstuff/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticstuff')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/staticstuff/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'staticstuff')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

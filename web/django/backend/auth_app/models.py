@@ -31,7 +31,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     username = models.CharField(max_length=30, unique=True)
     objects = AppUserManager()
-    profile_picture = models.ImageField(null=True, blank=True, upload_to='images/')
+    profile_picture = models.ImageField(null=True, blank=True, upload_to='staticstuff/images')
     friends = models.ManyToManyField('self', symmetrical=True, blank=True)
     games = models.IntegerField(blank=True, null=True)
     wins = models.IntegerField(blank=True, null=True)
