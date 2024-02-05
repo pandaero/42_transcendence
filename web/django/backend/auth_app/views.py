@@ -22,7 +22,7 @@ def header_view(request):
 
 
 def game(request):
-	return render(request,'tmpGame.html')
+	return render(request,'game.html')
 
 def profile(request):
 	return render(request, 'profile.html')
