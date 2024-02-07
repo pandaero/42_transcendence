@@ -45,7 +45,15 @@
 	<div class="friends">
 		<h1>My friends:</h1>
 		{% for user in request.user.friends.all%}
-			<a href="/profile/{{ user }}">{{ user }}</a> <br>
+			<a href="/profile/{{ user }}">{{ user }}</a>
+			{% if user.is_online %}
+				<img src="{% static 'images/online.png' %}" width="22"/>
+				<a>Online</a>
+			{% elif user.last_online %}
+				<img src="{% static 'images/last_online.png' %}" width="22"/>
+				<a>{{ user.get_online_info }} </a>
+			{% endif %}
+			<br>
 		{% endfor %}
 	</div>
 <script type='module' src="{% static '/js/friend_request.js' %}"></script>

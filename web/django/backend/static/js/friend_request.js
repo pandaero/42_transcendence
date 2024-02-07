@@ -21,21 +21,18 @@ export function init() {
 
 	acceptButtons.forEach(function(button){
 		button.addEventListener('click', function(event) {
-			console.log("1");
 			handleSubmit(event, button);
 		});
 	});
 	
 	declineButtons.forEach(function(button){
 		button.addEventListener('click', function(event) {
-			console.log("2");
 			handleSubmit(event, button);
 		});
 	});
 	
 	addFriendButtons.forEach(function(button){
 		button.addEventListener('click', function(event) {
-			console.log("3");
 			handleSubmit(event, button);
 		});
 	});
@@ -74,12 +71,10 @@ export function unload(){
 
 function handleSubmit(event, button){
 	event.preventDefault();
-	console.log("inside function");
 	var form = event.target.closest('form');
 	var formData = new FormData(form);
 
 	var user_id = button.getAttribute('data-user-id');
-	console.log("user_id: ", user_id);
 	formData.append('user_id', user_id);
 
 	var jsonObject = {};
@@ -98,12 +93,9 @@ function handleSubmit(event, button){
 		body: JSON.stringify(jsonObject),
 	};
 	try{
-		console.log(form.action);
-		console.log(fetchOptions);
 		fetch(form.action, fetchOptions)
 		.then(respone => respone.json())
 		.then(data => {
-			console.log(data.status);
 			if (data.status === "success"){
 				if (data.message === 'Friend request sent successfully.'){
 					alreadySentMsg.textContent= "";

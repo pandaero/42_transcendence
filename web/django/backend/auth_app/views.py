@@ -48,7 +48,6 @@ def login_view(request):
 		try:
 			data = json.loads(request.body)
 		except Exception as e:
-			print(request.body)
 			return JsonResponse({'status':'error', 'message':str(request.body)})
 		email = data['email']
 		password = data['password']
@@ -89,7 +88,6 @@ def settings_view(request):
 		return render(request, 'settings.html')
 	
 	elif request.method == 'POST':
-		print("line 92", file=sys.stderr)
 		data = json.loads(request.body)
 		user_id = request.user.user_id
 		user = AppUser.objects.get(user_id=user_id)
@@ -108,9 +106,8 @@ def settings_view(request):
 				user.save()
 		except:
 			return JsonResponse({'status':'error', 'message':'Username already exists.'})
-		eprint("we are outside of the if")
+
 		if 'profile_picture' in data:
-			eprint("we are saving");
 			imgstr = data['profile_picture']
 			image_data = base64.b64decode(imgstr)
 			
@@ -122,7 +119,6 @@ def settings_view(request):
 			new_password = data['password']
 			user.set_password(new_password)
 			user.save()
-		eprint("at the end")
 
 		return JsonResponse({'status':'success', 'message':'Settings updated successfully.'})
 
@@ -136,10 +132,7 @@ def friends_view(request):
 def send_friend_request_view(request, user_id):
 	if request.method == 'POST':
 		from_user = request.user
-		print(request.user, file=sys.stderr)
 		to_user = AppUser.objects.get(user_id=user_id)
-		print(to_user, file=sys.stderr)
-		print(f"user_id: {user_id}", file=sys.stderr)
 
 		friend_requests, created = FriendRequest.objects.get_or_create(sender=from_user, receiver=to_user)
 		if created:

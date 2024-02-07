@@ -1,6 +1,8 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 class AppUserManager(BaseUserManager):
     def create_user(self, email, username, password):
@@ -24,6 +26,8 @@ class AppUserManager(BaseUserManager):
         user.is_staff = True
         user.save(using=self.db)
         return user
+    
+    
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
@@ -38,6 +42,19 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     losses = models.IntegerField(blank=True, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+
+    last_online = models.DateTimeField(blank=True, null=True)
+    def is_online (self):
+        if self.last_online:
+            return (timezone.now() - self.last_online < timezone.timedelta(minutes=3))
+
+    def get_online_info(self):
+        if self.is_online():
+            return 'Online'
+        
+        if self.last_online:
+            return 'Was active {}'.format(naturaltime(self.last_online))
+        return 'Unknown'
     def __str__(self):
         return self.email
 
