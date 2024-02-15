@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html>
     {% load static %}
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
-
     <div>
+        <h1>Login</h1>
         <form method="post" id="loginForm">
             {% csrf_token %}
             <div>
@@ -36,5 +29,3 @@
     </div>
 
     <script defer type='module' src="{% static 'js/login.js' %}"></script>
-</body>
-</html>

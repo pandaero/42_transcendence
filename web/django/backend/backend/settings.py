@@ -36,6 +36,7 @@ STATICFILES_DIRS = [
 
 INSTALLED_APPS = [
     'auth_app',
+	'pongGame',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,6 +55,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CHANNEL_LAYERS = {
+	'default':{
+		'BACKEND': 'channels.layers.InMemoryChannelLayer',
+		'CONFIG': {
+			"hosts": [('127.0.0.1', 6379)],
+        }
+    }
+}
 
 CSRF_TRUSTED_ORIGINS = [
     "https://localhost",

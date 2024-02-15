@@ -1,11 +1,19 @@
-var DIRECTION = {
-	IDLE: 0,
-	UP: 1,
-	DOWN: 2,
-	LEFT: 3,
-	RIGHT: 4
-};
-
-var rounds = [5, 5, 3, 3, 2];
-
-var colors = [ '#1abc9c', '#2ecc71', '#3498db' , '#8c52ff', '#9b59b6']
+export function init() {
+	return new Promise((resolve, reject) => {
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = 'game.css'; // replace with your CSS file path
+		document.getElementsByTagName('head')[0].appendChild(link);
+		if (loginBtn) {
+			console.log("login button found");
+			loginBtn.addEventListener('click', (event) => loginBtnClickHandler(event));
+			// Resolve the promise if everything is successful
+			resolve();
+		} else {
+			// Reject the promise if the login button is not found
+			console.log("login button not found");
+			reject(new Error("Login button not found"));
+		}
+	});
+}

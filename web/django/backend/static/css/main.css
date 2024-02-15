@@ -33,3 +33,19 @@ body {
 .span-container span{
 	margin: 1em;
 }
+
+#content{
+	display: flex;
+	justify-content: center;
+}
+input[type="username"]{
+	width: 100%;
+}
+
+input[type="password"]{
+	width: 100%;
+}
+
+input[type="email"]{
+	width: 100%;
+}

@@ -73,6 +73,10 @@ async function handleRouting() {
 			case '/':
 				showPage('main.html');
 				break;
+			case '/chat':
+				jsFile = './chat.js';
+				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+				break;
 			case '/game':
 				jsFile = './game/tmpGame.js';
 				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
@@ -137,11 +141,13 @@ async function currentJS() {
 	console.log("unload events");
 	switch (page) {
 		case '/':
-			showPage('main.html');
 			break;
 		case '/game':
 			break;
 		case '/profile':
+			break;
+		case '/chat':
+			unloadEvents('./chat.js');
 			break;
 		case '/history':
 			break;
@@ -151,14 +157,14 @@ async function currentJS() {
 			break;
 		case '/friends':
 			if (user.authenticated)
-				unloadEvents('./friend_request.js');
+			unloadEvents('./friend_request.js');
 			break;
 		case '/register':
 			unloadEvents('./register.js');
 			break;
 		case '/login':
 			if (!user.authenticated)
-				unloadEvents('./login.js');
+			unloadEvents('./login.js');
 			break;
 		default:
 			break;
