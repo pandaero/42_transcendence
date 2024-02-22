@@ -29,15 +29,26 @@ services:
       - "7000:7000"
     networks:
       - t_network
+    command:
+        ["/code/start.sh"]
     volumes:
       - ./django/backend:/code
       - ./django/start.sh:/code/start.sh
       - static_volume:/code/staticstuff
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DJANGO_SETTINGS_MODULE: backend.settings
+
     depends_on:
       - postgres
     env_file:
       - .env
-    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:7000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
   nginx:
     build:
@@ -54,6 +65,12 @@ services:
     depends_on:
       - django
     restart: on-failure
+
+  redis:
+    image: "redis:latest"
+    container_name: "redis"
+    networks:
+      - t_network
 
 volumes:
   static_volume:

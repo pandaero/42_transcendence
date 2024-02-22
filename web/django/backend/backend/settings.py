@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'transcendence']
 
 
 # Application definition
@@ -35,6 +35,8 @@ STATICFILES_DIRS = [
 ]
 
 INSTALLED_APPS = [
+	'daphne',
+	'channels',
     'auth_app',
 	'pongGame',
     'django.contrib.admin',
@@ -42,8 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-	'channels'
+    'django.contrib.staticfiles'
 ]
 
 MIDDLEWARE = [
@@ -57,12 +58,12 @@ MIDDLEWARE = [
 ]
 
 CHANNEL_LAYERS = {
-	'default':{
-		'BACKEND': 'channels.layers.InMemoryChannelLayer',
-		'CONFIG': {
-			"hosts": [('127.0.0.1', 6379)],
-        }
-    }
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('localhost', 6379)],
+        },
+    },
 }
 
 CSRF_TRUSTED_ORIGINS = [
@@ -103,7 +104,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+# WSGI_APPLICATION = 'backend.wsgi.application'
+ASGI_APPLICATION = 'backend.asgi.application'
 
 
 # Database

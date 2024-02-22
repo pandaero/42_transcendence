@@ -1,7 +1,6 @@
 let chatWindow;
 let chatMessage;
 let sendBtn;
-let chatSocket;
 
 init();
 
@@ -17,8 +16,7 @@ function init() {
 			});
 			sendBtn = document.getElementById('chat-button');
 			sendBtn.addEventListener('click', sendMsg);
-			console.log("chat initialized");
-			connectChat();
+
 		} else {
 			// Reject the promise if the chat window is not found
 			console.log("chat window not found");
@@ -43,30 +41,6 @@ function unload() {
 	});
 }
 
-
-function connectChat(){
-	chatSocket = new WebSocket( (window.location.protocol == 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chatting/' );
-	chatSocket.onopen = function(e){
-		console.log("chat connected");
-	}
-}
-
-chatSocket.onmessage = function(event) {
-    console.log(`Data received from server: ${event.data}`);
-};
-
-chatSocket.onclose = function(event){
-	if (event.code === 1000) {
-		console.log(`Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-	} else {
-		console.log('Connection died');
-	}
-}
-
-
-chatSocket.onerror = function(error) {
-	console.log(`Error: ${error.message}`);
-};
 
 function sendMsg(){
 	let message = chatMessage.value;

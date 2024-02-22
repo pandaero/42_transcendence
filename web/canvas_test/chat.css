@@ -13,9 +13,9 @@
 }
 
 @media (max-width: 600px) {
-	#chat-window {
-		font-size: 13px; /* Set a fixed font size for small viewports */
-	}
+    #chat-window {
+        font-size: 13px; /* Set a fixed font size for small viewports */
+    }
 }
 
 #chat-input{

@@ -19,9 +19,6 @@ def eprint(*args, **kwargs):
 def header_view(request):
 	return render(request,'header.html')
 	
-def chat(request):
-	return render(request,'chat.html')
-
 def game(request):
 	return render(request,'game.html')
 
