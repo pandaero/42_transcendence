@@ -45,7 +45,7 @@ function unload() {
 
 
 function connectChat(){
-	chatSocket = new WebSocket( (window.location.protocol == 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chatting/' );
+	chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chatting/'); //wss only
 	chatSocket.onopen = function(e){
 		console.log("chat connected");
 	}

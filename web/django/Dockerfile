@@ -14,4 +14,4 @@ EXPOSE 7000
 WORKDIR /code
 # Run manage.py when the container launches
 
-CMD [daphne, "-b ", "0.0.0.0", "-p", "7000", "backend.asgi:application"]
+# CMD [daphne, "-b", "0.0.0.0", "-p", "7000", "v2","backend.asgi:application"]

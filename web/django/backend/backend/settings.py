@@ -61,7 +61,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('localhost', 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }
@@ -106,6 +106,9 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = 'backend.asgi.application'
+
+#For redis within docker compose
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 
 # Database
