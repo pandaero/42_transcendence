@@ -15,10 +15,10 @@ function init() {
 					sendMsg();
 				}
 			});
+			connectChat();
 			sendBtn = document.getElementById('chat-button');
 			sendBtn.addEventListener('click', sendMsg);
 			console.log("chat initialized");
-			connectChat();
 		} else {
 			// Reject the promise if the chat window is not found
 			console.log("chat window not found");
@@ -47,12 +47,14 @@ function unload() {
 function connectChat(){
 	chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chatting/'); //wss only
 	chatSocket.onopen = function(e){
-		console.log("chat connected");
+		console.log("Socket is open");
 	}
 }
 
 chatSocket.onmessage = function(event) {
     console.log(`Data received from server: ${event.data}`);
+	chatWindow.innerText += event.data + "\n";
+	chatWindow.scrollTop = chatWindow.scrollHeight;
 };
 
 chatSocket.onclose = function(event){
@@ -69,12 +71,20 @@ chatSocket.onerror = function(error) {
 };
 
 function sendMsg(){
-	let message = chatMessage.value;
-	message = message.trim();
-	if(message === ""){
+	// TODO with user Authentication
+	let text = chatMessage.value;
+	text = text.trim();
+	if(text === ""){
 		return;
 	}
-	console.log("message: " + message);
+	let message = {
+		"username": "TestUser",
+		"message": text,
+	};
+	if (chatSocket.readyState === WebSocket.OPEN) {
+	// console.log("message: " + message);
+	chatSocket.send(JSON.stringify(message));	
+}
 	chatMessage.value = "";
 }
 

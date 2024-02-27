@@ -9,7 +9,9 @@
 	border-radius: 10px;
 	border: 1px solid black;
 	font-size: calc(10px + 0.5vw);
+	scrollbar-gutter: stable both-edges;
 	/* padding-top: 10px; */
+
 }
 
 @media (max-width: 600px) {
