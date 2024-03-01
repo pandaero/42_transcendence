@@ -1,11 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login as auth_login, views as auth_views
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
 from django.core.files.base import ContentFile
-from django.shortcuts import redirect
-from urllib.parse import urlparse
 from utils import validateEmail, validatePassword, validateUsername
 from .models import AppUser, FriendRequest
 import base64
@@ -24,10 +20,46 @@ def header_view(request):
 def game(request):
 	return render(request,'game.html')
 
-def profile(request):
-	return render(request, 'profile.html')
+def profile(request, **args):
+	if args :
+		if request.user.is_authenticated:
+			friendUser  = AppUser.objects.get(user_id=args['user_id'])
+
+			eprint(friendUser)
+			if request.user.friends.filter(email=friendUser.email).exists():
+				friend_game_history = friendUser.get_game_history()[:5]
+				games_history = []
+				for game in friend_game_history:
+					winner = game.player_one if game.player_one_score > game.player_two_score else game.player_two 
+					tie = True if game.player_one_score == game.player_two_score else False
+					games_history.append({
+						'game_id': game.game_id,
+						'game_date': game.game_date,
+						'player_one': game.player_one.username,
+						'player_one_score': game.player_one_score,
+						'player_two': game.player_two.username,
+						'player_two_score': game.player_two_score,
+						'winner': winner,
+						'tie': tie
+					})
+				friendUserStats = {
+					'profile_picture': friendUser.profile_picture.url,
+					'games_played': friendUser.games,
+					'wins': friendUser.wins,
+					'losses': friendUser.losses,
+					'draws': friendUser.draws,
+					'games_history': games_history
+					}
+				return JsonResponse({"status": "success", 'stats': friendUserStats})
+			else:
+				return JsonResponse({"status": "error", 'message':'You are not friends with this user.'})
+		return JsonResponse({"status": "error", 'message':'You must be logged in to view this page.'})
+	else:
+		return render(request, 'profile.html')
+
 
 def history(request):
+
 	return render(request, 'history.html')
 
 
@@ -174,7 +206,6 @@ def getUserData_view(request):
 	else:
 		user_data = {'authenticated': False}
 	return JsonResponse({'user': user_data})
-	
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
 	template_name = 'password_reset_form.html'

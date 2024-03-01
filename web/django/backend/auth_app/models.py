@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.db.models import Q
 
 class AppUserManager(BaseUserManager):
     def create_user(self, email, username, password):
@@ -37,13 +38,18 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     objects = AppUserManager()
     profile_picture = models.ImageField(null=True, blank=True, upload_to='staticstuff/images')
     friends = models.ManyToManyField('self', symmetrical=True, blank=True)
-    games = models.IntegerField(blank=True, null=True)
-    wins = models.IntegerField(blank=True, null=True)
-    losses = models.IntegerField(blank=True, null=True)
+    games = models.IntegerField(blank=True, null=True, default=0)
+    wins = models.IntegerField(blank=True, null=True, default=0)
+    losses = models.IntegerField(blank=True, null=True, default=0)
+    draws = models.IntegerField(blank=True, null=True, default=0)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-
     last_online = models.DateTimeField(blank=True, null=True)
+
+# returns a queryset of History instances where the user is either player_one or player_two
+    def get_game_history(self):
+        return History.objects.filter(Q(player_one=self) | Q(player_two=self)).order_by('-game_date')
+    
     def is_online (self):
         if self.last_online:
             return (timezone.now() - self.last_online < timezone.timedelta(minutes=3))
@@ -60,6 +66,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
 class History(models.Model):
     game_id = models.AutoField(primary_key=True)
+    game_date = models.DateTimeField(default=timezone.now)
     player_one = models.ForeignKey(AppUser, on_delete=models.SET_NULL, null=True, related_name='player_one_history')
     player_two = models.ForeignKey(AppUser, on_delete=models.SET_NULL, null=True, related_name='player_two_history')
     player_one_score = models.IntegerField(blank=True, null=True)
