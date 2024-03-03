@@ -30,7 +30,7 @@ def profile(request, **args):
 				friend_game_history = friendUser.get_game_history()[:5]
 				games_history = []
 				for game in friend_game_history:
-					winner = game.player_one if game.player_one_score > game.player_two_score else game.player_two 
+					winner = game.player_one.username if game.player_one_score > game.player_two_score else game.player_two.username 
 					tie = True if game.player_one_score == game.player_two_score else False
 					games_history.append({
 						'game_id': game.game_id,

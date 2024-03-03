@@ -182,16 +182,16 @@ function friend_details(data){
 			<li> wins: ${stats.wins} </li>
 			<li> losses: ${stats.losses} </li>
 			<li> draws: ${stats.draws} </li>
-			<span> Recent Games: </span>
-			${games_history ? games_history.slice(0, 5).map(game => 
+			<h5> Recent Games: </h5>
+			${stats.games_played > 0 ? games_history.slice(0, 5).map(game => 
 					`<ul>
 						<li>Game date: ${game.game_date}</li>
 						<li>Opponets: ${game.player_one} vs ${game.player_two}</li>
 						<li>Final Score: ${game.player_one_score} : ${game.player_two_score}</li>
-						<li><a>Final Result: ${game.tie? "Tie" : "Winner: " + game.winner}</a></li>
+						<li><a>Final Result: <br>${game.tie? "Tie" : "Winner: " + game.winner}</a></li>
 					</ul>
 					`
-				).join('') : 'No games played yet.'}
+				).join('') : 'No recent games played'}
 		</ul>
 	`;
 	return div;
