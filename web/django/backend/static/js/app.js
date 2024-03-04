@@ -93,7 +93,6 @@ async function handleRouting() {
 				} 
 				else{
 					changeURL('/login', 'Login Page', {main : true});
-					showPage('/login');
 					break;
 				}
 				break;
@@ -101,13 +100,12 @@ async function handleRouting() {
 				if (user.authenticated){
 					jsFile='./friend_request.js';
 					showPage(`${page.slice(1)}/${page.slice(1)}.html`);
+					break;
 				}
 				else{
 					changeURL('/login', 'Login Page', {main : true});
-					showPage('/login');
 					break;
 				}
-				break;
 			case '/register':
 				jsFile = './register.js';
 				showPage(`${page.slice(1)}/${page.slice(1)}.html`);
@@ -115,7 +113,6 @@ async function handleRouting() {
 			case '/login':
 				if (user.authenticated){
 					changeURL('/', 'Main Page', {main : true});
-					showPage('main.html');
 					break;
 				}
 				jsFile = './login.js';
