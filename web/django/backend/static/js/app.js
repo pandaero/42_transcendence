@@ -27,7 +27,7 @@ function changeURL(path, title, stateObject) {
 	currentJS();
 	history.pushState(stateObject, title, path);
 	handleRouting();
-}	
+}
 
 function unloadEvents(str) {
 	import(str)
@@ -71,7 +71,13 @@ async function handleRouting() {
 
 		switch (page) {
 			case '/':
-				showPage('main.html');
+				document.getElementById('content').innerHTML = '';
+				console.log('Main page');
+				jsFile='./welcome.js';
+				let content = document.getElementById('content');
+				let filler = document.createElement('div');
+				filler.id = 'filler';
+				content.appendChild(filler);
 				break;
 			case '/chat':
 				jsFile = './chat.js';
@@ -138,9 +144,11 @@ async function handleRouting() {
 async function currentJS() {
 	let page = window.location.pathname;
 	const user = await fetchUserData();
-	console.log("unload events");
 	switch (page) {
 		case '/':
+			unloadEvents('./welcome.js');
+			document.getElementById('filler').remove();
+			document.getElementById('content').innerHTML = '';
 			break;
 		case '/game':
 			break;

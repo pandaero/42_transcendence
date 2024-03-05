@@ -49,3 +49,8 @@ input[type="password"]{
 input[type="email"]{
 	width: 100%;
 }
+
+#matrix{
+	flex: auto;
+	justify-content: center;
+}

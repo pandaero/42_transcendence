@@ -29,7 +29,7 @@ function init() {
 function unload() {
 	return new Promise((resolve, reject) => {
 		if (chatWindow) {
-			chatWIndow = null;
+			chatWindow = null;
 			chatMessage = null;
 			sendBtn = null;
 
