@@ -18,6 +18,7 @@ urlpatterns = [
 	path('settings/settings.html', views.settings_view, name='settings'),
 	path('send_friend_request/<int:user_id>', views.send_friend_request_view, name='send_friend_request'),
 	path('accept_friend_request/<int:friend_request_id>', views.accept_friend_request_view, name='accept_friend_request'),
+	path('unfriend/<int:user_id>', views.unfriend_view, name='unfriend'),
 	path('decline_friend_request/<int:friend_request_id>', views.decline_friend_request_view, name='decline_friend_request'),
 	path('password_reset', views.CustomPasswordResetView.as_view(), name='password_reset'),
 	path('password_reset_done', views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),

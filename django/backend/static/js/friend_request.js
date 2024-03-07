@@ -8,6 +8,8 @@ let successMsg;
 let successSentMsg;
 let alreadySentMsg;
 let declineMsg;
+let unfriendButtons;
+let unfriendMsg;
 
 let clickEvent;
 let div;
@@ -20,6 +22,9 @@ export function init() {
 	successSentMsg = document.getElementById('friend-request-sent');
 	alreadySentMsg = document.getElementById('alreadySent');
 	declineMsg = document.getElementById('declineMsg');
+	unfriendButtons = document.querySelectorAll('.unfriend_button');
+	unfriendMsg = document.getElementById('unfriend_msg');
+	
 
 	acceptButtons.forEach(function(button){
 		button.addEventListener('click', function(event) {
@@ -39,9 +44,15 @@ export function init() {
 		});
 	});
 
+	unfriendButtons.forEach(function(button){
+		button.addEventListener('click', function(event) {
+			handleSubmit(event, button);
+		});
+	});
+
 	const userDetailsList = document.querySelectorAll('.user-details');
 
-	clickEvent =userDetailsList.forEach(function(userDetails){
+	clickEvent = userDetailsList.forEach(function(userDetails){
 		const user_id = userDetails.querySelector('.user_id').getAttribute('data-user-id');
 		userDetails.addEventListener('click', function(event) {
 			const userInfo = userDetails.querySelector('.user-info');
@@ -79,20 +90,25 @@ export function unload(){
 		if (addFriendButtons){
 			addFriendButtons.forEach(function(button){
 				button.removeEventListener('click', handleSubmit);
-			});
+			})};
+		if (unfriendButtons){
+			unfriendButtons.forEach(function(button){
+				button.removeEventListener('click', handleSubmit);
+			})};
 		if (clickEvent){
 			clickEvent.forEach(function(clickEvent){
 				clickEvent.removeEventListener('click')});
 		}
-		} else {
+		else{
 			// Reject the promise if the login button is not found
 			reject(new Error("accept button not found"));
 		}
 		acceptButtons = null;
 		declineButtons = null;
 		addFriendButtons = null;
+		unfriendMsg = null;
 		div = null;
-
+		
 		resolve();
 	})};
 
@@ -137,6 +153,13 @@ function handleSubmit(event, button){
 					declineMsg.textContent = data.message;
 
 				}
+				else if (data.message === 'Unfriended successfully.'){
+					alreadySentMsg.textContent= "";
+					successSentMsg.textContent = "";
+					successMsg.textContent = "";
+					declineMsg.textContent = "";
+					unfriendMsg.textContent = data.message;
+				}
 				else{
 					alreadySentMsg.textContent = "";
 					successSentMsg.textContent = "";
@@ -146,6 +169,13 @@ function handleSubmit(event, button){
 			}
 			else if (data.status === "error" && data.message === "Friend request already sent."){
 				alreadySentMsg.textContent = data.message;
+				successSentMsg.textContent = "";
+				successMsg.textContent = "";
+				declineMsg.textContent = "";
+			}
+			else if (data.status === "error" && data.message === "Unfriend action is not possible. User is not your friend."){
+				unfriendMsg.textContent = data.message;
+				alreadySentMsg.textContent = "";
 				successSentMsg.textContent = "";
 				successMsg.textContent = "";
 				declineMsg.textContent = "";
@@ -173,6 +203,7 @@ async function fetchUserData(user_id){
 
 function friend_details(data){
 	div = document.createElement('div');
+	console.log("im here");
 	let stats = data.stats;
 	let games_history = stats.games_history;
 	div.innerHTML = `

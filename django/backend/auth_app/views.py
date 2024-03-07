@@ -1,5 +1,6 @@
+
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login as auth_login, views as auth_views
 from django.core.files.base import ContentFile
 from utils import validateEmail, validatePassword, validateUsername
@@ -25,7 +26,6 @@ def profile(request, **args):
 		if request.user.is_authenticated:
 			friendUser  = AppUser.objects.get(user_id=args['user_id'])
 
-			eprint(friendUser)
 			if request.user.friends.filter(email=friendUser.email).exists():
 				friend_game_history = friendUser.get_game_history()[:5]
 				games_history = []
@@ -171,6 +171,8 @@ def send_friend_request_view(request, user_id):
 			return JsonResponse({'status':'success', 'message':'Friend request sent successfully.'})
 		else:
 			return JsonResponse({'status':'error', 'message':'Friend request already sent.'})
+	else:
+		return HttpResponse("Bad request. Don't use the address bar.", status=400)
 	
 def accept_friend_request_view(request, friend_request_id):
 	if request.method == 'POST':
@@ -183,6 +185,8 @@ def accept_friend_request_view(request, friend_request_id):
 			friend_request.accept()
 			friend_request.delete()
 			return JsonResponse({'status':'success', 'message':'Friend request accepted successfully.'})
+	else:
+		return HttpResponse("Bad request. Don't use the address bar.", status=400)
 
 def decline_friend_request_view(request, friend_request_id):
 	if request.method == 'POST':
@@ -194,6 +198,20 @@ def decline_friend_request_view(request, friend_request_id):
 		if friend_request.receiver == request.user:
 			friend_request.delete()
 			return JsonResponse({'status': 'success', 'message':'Friend request declined.'})
+	else:
+		return HttpResponse("Bad request. Don't use the address bar.", status=400)
+
+def unfriend_view(request, user_id):
+	if request.method == 'POST':
+		friend_user = AppUser.objects.get(user_id=user_id)
+		if request.user.friends.filter(email=friend_user.email).exists():
+			request.user.friends.remove(friend_user)
+			friend_user.friends.remove(request.user)
+			return JsonResponse({'status': 'success', 'message':'Unfriended successfully.'})
+		else:
+			return JsonResponse({'status': 'error', 'message':'Unfriend action is not possible. User is not your friend.'})
+	else:
+		return HttpResponse("Bad request. Don't use the address bar.", status=400)
 
 def getUserData_view(request):
 	if request.user.is_authenticated:

@@ -49,15 +49,22 @@
 				<span style="cursor: pointer; text-decoration: underline; color: blue;"> {{ user.username }} </span>
 				<a class="user_id" style="display: none" data-user-id="{{ user.user_id }}"></a>
 				{% if user.is_online %}
-					<img src="{% static 'images/online.png' %}" width="22"/>
-					<a>Online</a>
+				<img src="{% static 'images/online.png' %}" width="22"/>
+				<a>Online</a>
 				{% elif user.last_online %}
-					<img src="{% static 'images/last_online.png' %}" width="22"/>
-					<a>{{ user.get_online_info }} </a>
+				<img src="{% static 'images/last_online.png' %}" width="22"/>
+				<a>{{ user.get_online_info }} </a>
 				{% endif %}
+				<form class="unfriend" action="unfriend/{{ user.user_id }}" method="post">
+					{% csrf_token %}
+					<button type="submit" class="unfriend_button" data-user-id="{{ user.user_id }}" style="background-color: red; color: white; width: 100px; height: 30px">Unfriend</button> 
+				</form>
+				<span id="unfriend_msg" style="color: green;"></span>
+				<br>
 				<div class="user-info" style="display: none"></div>
 			</div>
-		{% endfor %}
+			<br>
+			{% endfor %}
 	</div>
 <script type='module' src="{% static '/js/friend_request.js' %}"></script>
 </body>
