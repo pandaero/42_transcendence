@@ -1,4 +1,6 @@
-web/postgresql/data
+.env
+postgresql/data
 venv/
 */__pycache__
 *.pyc
+django/backend/media

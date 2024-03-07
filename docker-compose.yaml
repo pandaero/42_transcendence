@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: "postgres:16.1"
+    container_name: "postgres"
+    environment:
+      POSTGRES_DB : ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_HOST : ${DB_HOST}
+      POSTGRES_PORT : ${DB_PORT}
+    volumes:
+     - ./postgresql/data:/var/lib/postgresql/data
+    networks:
+      - t_network
+    env_file:
+      - .env
+    ports: 
+      - "5432:5432"
+    restart: on-failure
+
+  django:
+    container_name: django_web
+    build:
+      context: ./django
+      dockerfile: Dockerfile
+    ports:
+      - "7000:7000"
+    networks:
+      - t_network
+    volumes:
+      - ./django/backend:/code
+      - ./django/start.sh:/code/start.sh
+      - static_volume:/code/staticstuff
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    restart: on-failure
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    networks:
+      - t_network
+    volumes:
+      - static_volume:/code/staticstuff
+    ports:
+      - "443:443"
+      - "8000:8000"
+    depends_on:
+      - django
+    restart: on-failure
+
+volumes:
+  static_volume:
+
+networks:
+  t_network:
