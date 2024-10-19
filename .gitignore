@@ -1,4 +1,10 @@
-web/postgresql/data
-venv/
-*/__pycache__
+.env
+postgresql/data
+.venv/
+/__pycache__**
 *.pyc
+django/backend/media
+*/migrations
+*.log
+*.dump
+log/
